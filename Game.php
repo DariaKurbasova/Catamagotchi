@@ -12,6 +12,8 @@ class Game
     /** @var string */
     public $message;
 
+    public $action_history;
+
     /**
      * Game constructor.
      * @param Cat $cat
