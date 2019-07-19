@@ -41,48 +41,44 @@ class Cat
     }
 
     // Покормить котика одним из 3 видов корма: сухой, влажный и домашний. Котан привередливый, не все корма любит одинково.
-    public function feed_dry()
-    {
-        $history[] = "feed_dry";
+    public function feed ($food_type) {
+        $this->food += 10;
+        $history[] = $food_type;
         $this->check_same_actions("food");
         if ($this->check_same_actions("food") == 5) {
             $probability_like = rand(1, 10);
-            if ($probability_like == 10) {
-                $this->mood -= 10;
-                $this->game->message = self::EAT_MESSAGE_HATE;
-            } else {
-                $this->mood += 5;
-                $this->game->message = self::EAT_MESSAGE_LIKE;
+
+            switch ($food_type) {
+                case "dry":
+                    if ($probability_like == 10) {
+                        $this->mood -= 10;
+                        $this->game->message = self::EAT_MESSAGE_HATE;
+                    } else {
+                        $this->mood += 5;
+                        $this->game->message = self::EAT_MESSAGE_LIKE;
+                    }
+                    break;
+                case "wet":
+                    if ($probability_like > 5) {
+                        $this->mood -= 10;
+                        $this->game->message = self::EAT_MESSAGE_HATE;
+                    } else {
+                        $this->mood += 15;
+                        $this->game->message = self::EAT_MESSAGE_LIKE;
+                    }
+                    break;
+                case "home":
+                    if (array_count_values($history)["feed-home"] < 3) {
+                        if ($this->check_same_actions("food") == 5) {
+                            $this->mood += 15;
+                            $this->game->message = self::EAT_MESSAGE_LIKE;
+                        }
+                    } else {
+                        $this->food -= 10;
+                        $this->game->message = self::STOP_MESSAGE;
+                    }
             }
-            $this->food += 10;
-        }
-    }
-    public function feed_wet () {
-        $history[] = "feed_wet";
-        $this->check_same_actions("food");
-        if ($this->check_same_actions("food") == 5) {
-            $probability_like = rand(1, 10);
-            if ($probability_like > 5) {
-                $this->mood -= 10;
-                $this->game->message = self::EAT_MESSAGE_HATE;
-            } else {
-                $this->mood += 15;
-                $this->game->message = self::EAT_MESSAGE_LIKE;
-            }
-            $this->food += 10;
-        }
-    }
-    public function feed_home () {
-        $history[] = "feed_home";
-        $this->check_same_actions("food");
-        if (array_count_values($history)["feed-home"] < 3) {
-            if ($this->check_same_actions("food") == 5) {
-                $this->mood += 15;
-                $this->game->message = self::EAT_MESSAGE_LIKE;
-                $this->food += 10;
-            }
-        } else {
-            $this->game->message = self::STOP_MESSAGE;
+
         }
     }
 
