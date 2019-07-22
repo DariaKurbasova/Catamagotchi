@@ -30,22 +30,21 @@ class Cat
     // Одни и те же действия быстро наскучат котику. Нужно не больше 3 одинаковых подряд.
     public function check_same_actions ($action) {
         $history = $this->game->action_history;
-        if ($history[count($history)-1] == $history[count($history)-2] && $history[count($history)-1] == $history[count($history)-3]) {
+        if (count($history) >= 3 && $history[count($history)-1] == $history[count($history)-2] && $history[count($history)-1] == $history[count($history)-3]) {
             $this->$action += 10;
             $this->mood -= 20;
             $this->game->message = self::TIRED_OF_IT_MESSAGE;
-            return null;
+            return true;
         } else {
-            return 5;
+            return false;
         }
     }
 
     // Покормить котика одним из 3 видов корма: сухой, влажный и домашний. Котан привередливый, не все корма любит одинково.
     public function feed ($food_type) {
         $this->food += 10;
-        $history[] = $food_type;
-        $this->check_same_actions("food");
-        if ($this->check_same_actions("food") == 5) {
+        $this->game->action_history[] = $food_type;
+        if (!$this->check_same_actions("food")) {
             $probability_like = rand(1, 10);
 
             switch ($food_type) {
@@ -68,11 +67,9 @@ class Cat
                     }
                     break;
                 case "home":
-                    if (array_count_values($history)["feed-home"] < 3) {
-                        if ($this->check_same_actions("food") == 5) {
-                            $this->mood += 15;
-                            $this->game->message = self::EAT_MESSAGE_LIKE;
-                        }
+                    if (array_count_values($this->game->action_history)["home"] < 3) {
+                        $this->mood += 15;
+                        $this->game->message = self::EAT_MESSAGE_LIKE;
                     } else {
                         $this->food -= 10;
                         $this->game->message = self::STOP_MESSAGE;
@@ -84,9 +81,8 @@ class Cat
 
     // Погладить
     public function stroke () {
-        $history[] = "stroke";
-        $this->check_same_actions("communication");
-        if ($this->check_same_actions("communication") == 5) {
+        $this->game->action_history[] = "stroke";
+        if (!$this->check_same_actions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 5) {
                 $this->mood -= 10;
@@ -100,9 +96,8 @@ class Cat
     }
     // Поиграть с дразнилкой
     public function play_teaser () {
-        $history[] = "play_teaser";
-        $this->check_same_actions("communication");
-        if ($this->check_same_actions("communication") == 5) {
+        $this->game->action_history[] = "play_teaser";
+        if (!$this->check_same_actions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 8) {
                 $this->mood -= 10;
@@ -116,9 +111,8 @@ class Cat
     }
     // Поиграть с мышкой
     public function play_mouse () {
-        $history[] = "play_teaser";
-        $this->check_same_actions("communication");
-        if ($this->check_same_actions("communication") == 5) {
+        $this->game->action_history[] = "play_mouse";
+        if (!$this->check_same_actions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 6) {
                 $this->mood -= 10;
