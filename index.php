@@ -6,13 +6,16 @@
     <link rel="stylesheet" href="indicators.css">
 </head>
 <body>
-
 <?php
 require_once 'Game.php';
 session_start();
 
-if (!empty($_SESSION['game'])) {
+if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
     $game = $_SESSION['game'];
+    /** @var Game $game */
+
+    $cat = $game->cat;
+
     var_dump($game);
     echo "<br>";
 
@@ -50,21 +53,21 @@ if (!empty($_SESSION['game'])) {
     </div>
     <div class = "indicators">
         <div class = "food_satisfaction">
-            Сытость: <?= $game->cat->food ?>
+            Сытость: <?= $cat->food ?>
             <div class = "indicator food_indicator glow">
-                <span style = "width: <?= $game->cat->food ?>%; max-width: 100%;"></span>
+                <span style = "width: <?= $cat->food - $cat->food_change ?>%;" data-width="<?= $cat->food ?>"></span>
             </div>
         </div>
         <div class = "communication_satisfaction">
             Общение: <?= $game->cat->communication ?>
             <div class = "indicator communication_indicator glow">
-                <span style = "width: <?= $game->cat->communication ?>%; max-width: 100%;"></span>
+                <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->communication ?>"></span>
             </div>
         </div>
         <div class = "mood">
             Настроение: <?= $game->cat->mood ?>
             <div class = "indicator mood_indicator glow">
-                <span style = "width: <?= $game->cat->mood ?>%; max-width: 100%;"></span>
+                <span style = "width: <?= $cat->mood - $cat->mood_change ?>%;" data-width="<?= $cat->mood ?>"></span>
             </div>
         </div>
     </div>
@@ -82,16 +85,26 @@ if (!empty($_SESSION['game'])) {
         Но учтите, что игровой котик совсем как настоящий - такой же привереда. Не все ваши действия придутся ему по душе.
         А впрочем, вы и сами сможете разобраться, что к чему. Придумайте котейке имя и вперед!
     </p>
-    <form method="post" action="">
-        <label>Имя котика
-            <input class = "cat-name-text" type="text" name="cat_name">
-        </label>
-        <input id = "cat-name-button" type="submit" value="Сохранить имя">
+<!--    <form method="post" action="">-->
+<!--        <label>Имя котика-->
+<!--            <input class = "cat-name-text" type="text" name="cat_name">-->
+<!--        </label>-->
+<!--        <input id = "cat-name-button" type="submit" value="Сохранить имя">-->
+<!--    </form><br>-->
+<!--    --><?php //if (!empty($_POST['cat_name'])) {?>
+<!--    <a id = "start-game-button" style="color: darkgreen;" href="action.php?action=start_game&name=-->
+<!--    --><?//=$_POST['cat_name']?><!--">Начать игру</a><br>-->
+<!--    --><?php //} ?>
+<form method="get" action="action.php?action=start_game">
+    <input type = "hidden" name="action" value="start_game">
+    <label>Имя котика
+        <input class = "cat-name-text" type="text" name="name">
+    </label>
+    <input type = "submit" value = "Начать игру">
     </form><br>
-    <?php if (!empty($_POST['cat_name'])) {?>
-    <a id = "start-game-button" style="color: darkgreen;" href="action.php?action=start_game&name=
-    <?=$_POST['cat_name']?>">Начать игру</a><br>
-    <?php } ?>
-    </body>
-    </html>
-<?php }
+<?php } ?>
+
+<script src="script.js"></script>
+
+</body>
+</html>

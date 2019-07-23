@@ -7,6 +7,11 @@ class Cat
     public $food = 50;
     public $communication = 50;
 
+    public $mood_change = 0;
+    public $food_change = 0;
+    public $communication_change = 0;
+
+
     CONST EAT_MESSAGE_LIKE = "Ммм, вкуснятина!";
     CONST EAT_MESSAGE_HATE = "Фу, ну и гадость!";
     CONST COMMUNICATE_MESSAGE_LIKE = "Люблю тебя, человек!";
@@ -32,7 +37,7 @@ class Cat
         $history = $this->game->action_history;
         if (count($history) >= 3 && $history[count($history)-1] == $history[count($history)-2] && $history[count($history)-1] == $history[count($history)-3]) {
             $this->$action += 10;
-            $this->mood -= 20;
+            $this->mood_change -= 20;
             $this->game->message = self::TIRED_OF_IT_MESSAGE;
             return true;
         } else {
@@ -42,7 +47,7 @@ class Cat
 
     // Покормить котика одним из 3 видов корма: сухой, влажный и домашний. Котан привередливый, не все корма любит одинково.
     public function feed ($food_type) {
-        $this->food += 10;
+        $this->food_change += 10;
         $this->game->action_history[] = $food_type;
         if (!$this->check_same_actions("food")) {
             $probability_like = rand(1, 10);
@@ -50,28 +55,28 @@ class Cat
             switch ($food_type) {
                 case "dry":
                     if ($probability_like == 10) {
-                        $this->mood -= 10;
+                        $this->mood_change -= 10;
                         $this->game->message = self::EAT_MESSAGE_HATE;
                     } else {
-                        $this->mood += 5;
+                        $this->mood_change += 5;
                         $this->game->message = self::EAT_MESSAGE_LIKE;
                     }
                     break;
                 case "wet":
                     if ($probability_like > 5) {
-                        $this->mood -= 10;
+                        $this->mood_change -= 10;
                         $this->game->message = self::EAT_MESSAGE_HATE;
                     } else {
-                        $this->mood += 15;
+                        $this->mood_change += 15;
                         $this->game->message = self::EAT_MESSAGE_LIKE;
                     }
                     break;
                 case "home":
                     if (array_count_values($this->game->action_history)["home"] < 3) {
-                        $this->mood += 15;
+                        $this->mood_change += 15;
                         $this->game->message = self::EAT_MESSAGE_LIKE;
                     } else {
-                        $this->food -= 10;
+                        $this->food_change -= 10;
                         $this->game->message = self::STOP_MESSAGE;
                     }
             }
@@ -85,13 +90,13 @@ class Cat
         if (!$this->check_same_actions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 5) {
-                $this->mood -= 10;
+                $this->mood_change -= 10;
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             } else {
-                $this->mood += 20;
+                $this->mood_change += 20;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
-            $this->communication += 10;
+            $this->communication_change += 10;
         }
     }
     // Поиграть с дразнилкой
@@ -100,13 +105,13 @@ class Cat
         if (!$this->check_same_actions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 8) {
-                $this->mood -= 10;
+                $this->mood_change -= 10;
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             } else {
-                $this->mood += 15;
+                $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
-            $this->communication += 10;
+            $this->communication_change += 10;
         }
     }
     // Поиграть с мышкой
@@ -115,13 +120,62 @@ class Cat
         if (!$this->check_same_actions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 6) {
-                $this->mood -= 10;
+                $this->mood_change -= 10;
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             } else {
-                $this->mood += 15;
+                $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
-            $this->communication += 10;
+            $this->communication_change += 10;
         }
+    }
+
+    public function fix_limits() {
+        $this->fix_limit($this->food);
+        $this->fix_limit($this->mood);
+        $this->fix_limit($this->communication);
+    }
+
+    public function fix_limit(&$value) {
+        if ($value > 100) {
+            $value = 100;
+        } elseif ($value < 0) {
+            $value = 0;
+        }
+    }
+
+    public function run_action($action_type) {
+        $this->mood_change = 0;
+        $this->food_change = 0;
+        $this->communication_change = 0;
+
+        // Выбираем и запускаем действие
+        // В действиях не меняем муд/фуд, а присваиваем _change
+        switch ($action_type) {
+            case 'eat_dry':
+                $this->feed('dry');
+                break;
+            case 'eat_wet':
+                $this->feed('wet');
+                break;
+            case 'eat_home':
+                $this->feed('home');
+                break;
+            case 'stroke':
+                $this->stroke();
+                break;
+            case 'play_teaser':
+                $this->play_teaser();
+                break;
+            case 'play_mouse':
+                $this->play_mouse();
+                break;
+        }
+
+        $this->mood += $this->mood_change;
+        $this->food += $this->food_change;
+        $this->communication += $this->communication_change;
+
+        $this->fix_limits();
     }
 }

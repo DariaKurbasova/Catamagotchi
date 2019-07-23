@@ -16,17 +16,18 @@
     display: inline-block;
     height: 20px;
     width: 200px;
+    max-width: 100%;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
     -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
     box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
-    -webkit-transition: width .4s ease-in-out;
-    -moz-transition: width .4s ease-in-out;
-    -ms-transition: width .4s ease-in-out;
-    -o-transition: width .4s ease-in-out;
-    transition: width .4s ease-in-out;
+    -webkit-transition: width .6s ease-in-out;
+    -moz-transition: width .6s ease-in-out;
+    -ms-transition: width .6s ease-in-out;
+    -o-transition: width .6s ease-in-out;
+    transition: width .6s ease-in-out;
 }
 .food_indicator span {
     background-color: #37D8EE;
