@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>КОТамагочи</title>
+    <link rel="stylesheet" href="start_page.css">
     <link rel="stylesheet" href="indicators.css">
 </head>
 <body>
@@ -79,12 +80,18 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
     <?php
     unset($game->message);
 } else {?>
-    <h1>КОТамагочи</h1>
-    <p class = "game_description">
-        <b>Цель игры</b> благородна - сделать котейку счастливым. Для этого вам придется его кормить, гладить и всячески развлекать.
-        Но учтите, что игровой котик совсем как настоящий - такой же привереда. Не все ваши действия придутся ему по душе.
-        А впрочем, вы и сами сможете разобраться, что к чему. Придумайте котейке имя и вперед!
-    </p>
+    <div class = "start_page">
+        <div class = "container">
+            <div class = "main-header">
+                <img class="game_icon" src="img/Cat-icon.png">
+                <h1 class = "game_title">КОТамагочи</h1>
+                <div class="clearfix"></div>
+            </div>
+            <p class = "game_description">
+                <b style="font-size: 25px;">Цель игры</b> благородна — сделать котейку счастливым. Для этого вам придется его кормить, гладить и всячески развлекать.
+                Но учтите, что игровой котик совсем как настоящий — такой же привереда. Не все ваши действия придутся ему по душе.
+                А впрочем, вы и сами сможете разобраться, что к чему. <b>Придумайте котейке имя и вперед!</b>
+            </p>
 <!--    <form method="post" action="">-->
 <!--        <label>Имя котика-->
 <!--            <input class = "cat-name-text" type="text" name="cat_name">-->
@@ -95,13 +102,16 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 <!--    <a id = "start-game-button" style="color: darkgreen;" href="action.php?action=start_game&name=-->
 <!--    --><?//=$_POST['cat_name']?><!--">Начать игру</a><br>-->
 <!--    --><?php //} ?>
-<form method="get" action="action.php?action=start_game">
-    <input type = "hidden" name="action" value="start_game">
-    <label>Имя котика
-        <input class = "cat-name-text" type="text" name="name">
-    </label>
-    <input type = "submit" value = "Начать игру">
-    </form><br>
+            <form class = "start_game_form" method="get" action="action.php?action=start_game">
+                <input type = "hidden" name="action" value="start_game">
+                <label>Имя котика
+                    <input class = "cat_name_text" type="text" name="name">
+                </label>
+                <input class = "start_game_button" type = "submit" value = "Начать игру">
+            </form><br>
+            <img class = "start_image" src="img/two_cats.jpg">
+        </div>
+    </div>
 <?php } ?>
 
 <script src="script.js"></script>
