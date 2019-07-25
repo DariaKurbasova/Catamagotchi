@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>КОТамагочи</title>
+    <link rel="icon" type="image/png" href="img/Cat-icon.png" />
     <link rel="stylesheet" href="start_page.css">
     <link rel="stylesheet" href="game_page.css">
     <link rel="stylesheet" href="indicators.css">
@@ -25,7 +26,6 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
         echo "<br>" . $game->message;
     }
     ?>
-
     <div class = "game_page">
         <div class = "container">
             <div class = "main-header">
@@ -34,7 +34,14 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <div class="clearfix"></div>
             </div>
             <p style="display: none;" class = "instruction">Инструкция к игре</p>
+            <div class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
+            <br>
             <div class = "actions">
+                <?php if (count($game->action_history) % 4 == 3) { ?>
+                    <div class = "feed_dry">
+                        <a style="color: darkred; font-weight: bold;" href="action.php?action=sleep">Котик хочет спать!</a><br><br>
+                    </div>
+                <?php } else { ?>
                 <div class = "food_actions">
                     <div class = "feed_dry">
                         <a style="color: darkred;" href="action.php?action=eat_dry">Покормить сухим кормом</a><br>
@@ -60,6 +67,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <a style="color: darkblue;" href="action.php?action=walking">Вывести на прогулку</a><br><br><br>
                     </div>
                 </div>
+                <?php } ?>
             </div>
 
             <div class = "indicators">
@@ -90,7 +98,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             </div>
             <br>
             <div class = "restart_game">
-                <a style="color: darkgreen;" href="action.php?action=start_game&name=vasya">Начать игру с котиком заново</a><br>
+                <a style="color: darkgreen;" href="action.php?action=start_game&name=<?= $cat->name ?>">Начать игру с котиком заново</a><br><br>
             </div>
         </div>
     </div>

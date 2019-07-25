@@ -138,6 +138,7 @@ class Cat
             $this->communication_change += 10;
         }
     }
+    // Вывести котика на прогулку
     public function walking () {
         $this->game->action_history[] = "walking";
         if (!$this->checkSameActions("communication")) {
@@ -147,6 +148,29 @@ class Cat
             $this->communication_change += 10;
             // todo Добавить особые условия этому методу
         }
+    }
+    // Сброс показателей ночью (каждое 4-е действие - сон)
+    public function sleep () {
+        $this->game->action_history[] = "sleep";
+        $this->food_change = -10;
+        if ($this->food > 60) {
+            $this->food_change -= round(($this->food - 60) / 5);
+        }
+        if ($this->food > 90) {
+            $this->food_change -= round(($this->food - 90) / 5);
+        }
+        $this->communication_change = -10;
+        if ($this->communication > 60) {
+            $this->communication_change -= round(($this->communication - 60) / 5);
+        }
+        if ($this->communication > 90) {
+            $this->communication_change -= round(($this->communication - 90) / 5);
+        }
+        $this->energy_change = 10;
+        if ($this->energy <= 60) {
+            $this->energy_change += 10;
+        }
+        $this->mood_change -= 10;
     }
 
     public function fixLimits() {
@@ -193,6 +217,9 @@ class Cat
                 break;
             case 'walking':
                 $this->walking();
+                break;
+            case 'sleep':
+                $this->sleep();
                 break;
         }
 
