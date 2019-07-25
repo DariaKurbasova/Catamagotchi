@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>КОТамагочи</title>
     <link rel="stylesheet" href="start_page.css">
+    <link rel="stylesheet" href="game_page.css">
     <link rel="stylesheet" href="indicators.css">
 </head>
 <body>
@@ -17,64 +18,81 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
     $cat = $game->cat;
 
-    var_dump($game);
-    echo "<br>";
+     var_dump($game);
+     echo "<br>";
 
     if (!empty($game->message)) {
         echo "<br>" . $game->message;
     }
     ?>
 
-    <div class = "container"></div>
-    <h1>КОТамагочи</h1>
-    <p>Инструкция к игре</p>
-    <div class = "actions">
-        <div class = "food_actions">
-            <div class = "feed_dry">
-                <a style="color: darkred;" href="action.php?action=eat_dry">Покормить сухим кормом</a><br>
+    <div class = "game_page">
+        <div class = "container">
+            <div class = "main-header">
+                <img class="game_icon" src="img/Cat-icon.png">
+                <h1 class = "game_title">КОТамагочи</h1>
+                <div class="clearfix"></div>
             </div>
-            <div class = "feed_wet">
-                <a style="color: darkred;" href="action.php?action=eat_wet">Покормить влажным кормом</a><br>
+            <p style="display: none;" class = "instruction">Инструкция к игре</p>
+            <div class = "actions">
+                <div class = "food_actions">
+                    <div class = "feed_dry">
+                        <a style="color: darkred;" href="action.php?action=eat_dry">Покормить сухим кормом</a><br>
+                    </div>
+                    <div class = "feed_wet">
+                        <a style="color: darkred;" href="action.php?action=eat_wet">Покормить влажным кормом</a><br>
+                    </div>
+                    <div class = "feed_home">
+                        <a style="color: darkred;" href="action.php?action=eat_home">Покормить домашней едой</a><br><br>
+                    </div>
+                </div>
+                <div class = "communication_actions">
+                    <div class = "stroke">
+                        <a style="color: darkblue;" href="action.php?action=stroke">Погладить котика</a><br>
+                    </div>
+                    <div class = "play_mouse">
+                        <a style="color: darkblue;" href="action.php?action=play_mouse">Поиграть с мышкой</a><br>
+                    </div>
+                    <div class = "play_teaser">
+                        <a style="color: darkblue;" href="action.php?action=play_teaser">Поиграть с дразнилкой</a><br>
+                    </div>
+                    <div class = "walking">
+                        <a style="color: darkblue;" href="action.php?action=walking">Вывести на прогулку</a><br><br><br>
+                    </div>
+                </div>
             </div>
-            <div class = "feed_home">
-                <a style="color: darkred;" href="action.php?action=eat_home">Покормить домашней едой</a><br><br>
+
+            <div class = "indicators">
+                <div class = "food_satisfaction">
+                    Сытость: <?= $cat->food ?>
+                    <div class = "indicator food_indicator glow">
+                        <span style = "width: <?= $cat->food - $cat->food_change ?>%;" data-width="<?= $cat->food ?>"></span>
+                    </div>
+                </div>
+                <div class = "communication_satisfaction">
+                    Общение: <?= $game->cat->communication ?>
+                    <div class = "indicator communication_indicator glow">
+                        <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->communication ?>"></span>
+                    </div>
+                </div>
+                <div class = "energy_satisfaction">
+                    Энергия: <?= $game->cat->energy ?>
+                    <div class = "indicator energy_indicator glow">
+                        <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->energy ?>"></span>
+                    </div>
+                </div>
+                <div class = "mood">
+                    Настроение: <?= $game->cat->mood ?>
+                    <div class = "indicator mood_indicator glow">
+                        <span style = "width: <?= $cat->mood - $cat->mood_change ?>%;" data-width="<?= $cat->mood ?>"></span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class = "restart_game">
+                <a style="color: darkgreen;" href="action.php?action=start_game&name=vasya">Начать игру с котиком заново</a><br>
             </div>
         </div>
-        <div class = "communication_actions">
-            <div class = "stroke">
-                <a style="color: darkblue;" href="action.php?action=stroke">Погладить котика</a><br>
-            </div>
-            <div class = "play_mouse">
-                <a style="color: darkblue;" href="action.php?action=play_mouse">Поиграть с мышкой</a><br>
-            </div>
-            <div class = "play_teaser">
-                <a style="color: darkblue;" href="action.php?action=play_teaser">Поиграть с дразнилкой</a><br><br><br>
-            </div>
-        </div>
-    </div>
-    <div class = "indicators">
-        <div class = "food_satisfaction">
-            Сытость: <?= $cat->food ?>
-            <div class = "indicator food_indicator glow">
-                <span style = "width: <?= $cat->food - $cat->food_change ?>%;" data-width="<?= $cat->food ?>"></span>
-            </div>
-        </div>
-        <div class = "communication_satisfaction">
-            Общение: <?= $game->cat->communication ?>
-            <div class = "indicator communication_indicator glow">
-                <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->communication ?>"></span>
-            </div>
-        </div>
-        <div class = "mood">
-            Настроение: <?= $game->cat->mood ?>
-            <div class = "indicator mood_indicator glow">
-                <span style = "width: <?= $cat->mood - $cat->mood_change ?>%;" data-width="<?= $cat->mood ?>"></span>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class = "restart_game">
-        <a style="color: darkgreen;" href="action.php?action=start_game&name=vasya">Начать игру с котиком заново</a><br>
     </div>
 
     <?php

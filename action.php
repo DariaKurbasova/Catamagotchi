@@ -18,8 +18,7 @@ if (!empty($_GET['action']) || !empty($_SESSION['game'])) {
         // Игра уже создана, можно выполнять с ней действия
         $cat = $game->cat;
 
-        $cat->run_action($action);
-
+        $cat->runAction($action);
     }
 }
 header("location: /");

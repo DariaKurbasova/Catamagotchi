@@ -6,10 +6,12 @@ class Cat
     public $mood = 50;
     public $food = 50;
     public $communication = 50;
+    public $energy = 50;
 
     public $mood_change = 0;
     public $food_change = 0;
     public $communication_change = 0;
+    public $energy_change = 0;
 
 
     CONST EAT_MESSAGE_LIKE = "Ммм, вкуснятина!";
@@ -33,7 +35,7 @@ class Cat
     }
 
     // Одни и те же действия быстро наскучат котику. Нужно не больше 3 одинаковых подряд.
-    public function check_same_actions ($action) {
+    public function checkSameActions ($action) {
         $history = $this->game->action_history;
         if (count($history) >= 3 && $history[count($history)-1] == $history[count($history)-2] && $history[count($history)-1] == $history[count($history)-3]) {
             $this->$action += 10;
@@ -49,11 +51,12 @@ class Cat
     public function feed ($food_type) {
         $this->food_change += 10;
         $this->game->action_history[] = $food_type;
-        if (!$this->check_same_actions("food")) {
+        if (!$this->checkSameActions("food")) {
             $probability_like = rand(1, 10);
 
             switch ($food_type) {
                 case "dry":
+                    $this->energy_change += 5;
                     if ($probability_like == 10) {
                         $this->mood_change -= 10;
                         $this->game->message = self::EAT_MESSAGE_HATE;
@@ -63,6 +66,7 @@ class Cat
                     }
                     break;
                 case "wet":
+                    $this->energy_change += 10;
                     if ($probability_like > 5) {
                         $this->mood_change -= 10;
                         $this->game->message = self::EAT_MESSAGE_HATE;
@@ -72,6 +76,7 @@ class Cat
                     }
                     break;
                 case "home":
+                    $this->energy_change += 10;
                     if (array_count_values($this->game->action_history)["home"] < 3) {
                         $this->mood_change += 15;
                         $this->game->message = self::EAT_MESSAGE_LIKE;
@@ -87,22 +92,25 @@ class Cat
     // Погладить
     public function stroke () {
         $this->game->action_history[] = "stroke";
-        if (!$this->check_same_actions("communication")) {
+        if (!$this->checkSameActions("communication")) {
             $probability_like = rand(1, 10);
             if ($probability_like > 5) {
                 $this->mood_change -= 10;
+                $this->energy_change -= 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             } else {
                 $this->mood_change += 20;
+                $this->energy_change +=15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
             $this->communication_change += 10;
         }
     }
     // Поиграть с дразнилкой
-    public function play_teaser () {
+    public function playTeaser () {
         $this->game->action_history[] = "play_teaser";
-        if (!$this->check_same_actions("communication")) {
+        if (!$this->checkSameActions("communication")) {
+            $this->energy_change -=20;
             $probability_like = rand(1, 10);
             if ($probability_like > 8) {
                 $this->mood_change -= 10;
@@ -115,9 +123,10 @@ class Cat
         }
     }
     // Поиграть с мышкой
-    public function play_mouse () {
+    public function playMouse () {
         $this->game->action_history[] = "play_mouse";
-        if (!$this->check_same_actions("communication")) {
+        if (!$this->checkSameActions("communication")) {
+            $this->energy_change -= 20;
             $probability_like = rand(1, 10);
             if ($probability_like > 6) {
                 $this->mood_change -= 10;
@@ -129,14 +138,25 @@ class Cat
             $this->communication_change += 10;
         }
     }
-
-    public function fix_limits() {
-        $this->fix_limit($this->food);
-        $this->fix_limit($this->mood);
-        $this->fix_limit($this->communication);
+    public function walking () {
+        $this->game->action_history[] = "walking";
+        if (!$this->checkSameActions("communication")) {
+            $this->energy_change -= 25;
+            $this->mood_change += 20;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            $this->communication_change += 10;
+            // todo Добавить особые условия этому методу
+        }
     }
 
-    public function fix_limit(&$value) {
+    public function fixLimits() {
+        $this->fixLimit($this->food);
+        $this->fixLimit($this->mood);
+        $this->fixLimit($this->communication);
+        $this->fixLimit($this->energy);
+    }
+
+    public function fixLimit(&$value) {
         if ($value > 100) {
             $value = 100;
         } elseif ($value < 0) {
@@ -144,10 +164,11 @@ class Cat
         }
     }
 
-    public function run_action($action_type) {
+    public function runAction($action_type) {
         $this->mood_change = 0;
         $this->food_change = 0;
         $this->communication_change = 0;
+        $this->energy_change = 0;
 
         // Выбираем и запускаем действие
         // В действиях не меняем муд/фуд, а присваиваем _change
@@ -165,17 +186,21 @@ class Cat
                 $this->stroke();
                 break;
             case 'play_teaser':
-                $this->play_teaser();
+                $this->playTeaser();
                 break;
             case 'play_mouse':
-                $this->play_mouse();
+                $this->playMouse();
+                break;
+            case 'walking':
+                $this->walking();
                 break;
         }
 
         $this->mood += $this->mood_change;
         $this->food += $this->food_change;
         $this->communication += $this->communication_change;
+        $this->energy += $this->energy_change;
 
-        $this->fix_limits();
+        $this->fixLimits();
     }
 }
