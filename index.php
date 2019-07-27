@@ -19,8 +19,8 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
     $cat = $game->cat;
 
-     var_dump($game);
-     echo "<br>";
+//     var_dump($game);
+//     echo "<br>";
 
     if (!empty($game->message)) {
         echo "<br>" . $game->message;
@@ -34,41 +34,175 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <div class="clearfix"></div>
             </div>
             <p style="display: none;" class = "instruction">Инструкция к игре</p>
-            <div class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
+            <div style="display: none;" class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
             <br>
             <div class = "actions">
                 <?php if (count($game->action_history) % 4 == 3) { ?>
-                    <div class = "feed_dry">
+                    <div class = "sleep action">
                         <a style="color: darkred; font-weight: bold;" href="action.php?action=sleep">Котик хочет спать!</a><br><br>
                     </div>
                 <?php } else { ?>
                 <div class = "food_actions">
-                    <div class = "feed_dry">
-                        <a style="color: darkred;" href="action.php?action=eat_dry">Покормить сухим кормом</a><br>
+                    <div class = "feed_dry food_action action">
+                        <a style="text-decoration: none;" href="action.php?action=eat_dry">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon dry_food-icon" title="Покормить сухим кормом"></div>
+                        </a>
                     </div>
-                    <div class = "feed_wet">
-                        <a style="color: darkred;" href="action.php?action=eat_wet">Покормить влажным кормом</a><br>
+                    <div class = "feed_wet food_action action">
+                        <a style="text-decoration: none;" href="action.php?action=eat_wet">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon wet_food-icon" title="Покормить влажным кормом"></div>
+                        </a>
                     </div>
-                    <div class = "feed_home">
-                        <a style="color: darkred;" href="action.php?action=eat_home">Покормить домашней едой</a><br><br>
+                    <div class = "feed_home food_action action">
+                        <a style="text-decoration: none;" href="action.php?action=eat_home">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon home_food-icon" title="Покормить домашней едой"></div>
+                        </a>
                     </div>
                 </div>
                 <div class = "communication_actions">
-                    <div class = "stroke">
-                        <a style="color: darkblue;" href="action.php?action=stroke">Погладить котика</a><br>
+                    <div class = "stroke communication_action action">
+                        <a style="text-decoration: none;" href="action.php?action=stroke">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon stroke-icon" title="Погладить"></div>
+                        </a>
                     </div>
-                    <div class = "play_mouse">
-                        <a style="color: darkblue;" href="action.php?action=play_mouse">Поиграть с мышкой</a><br>
+                    <div class = "play_mouse communication_action action">
+                        <a style="text-decoration: none;" href="action.php?action=play_mouse">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon play_mouse-icon" title="Поиграть с мышкой"></div>
+                        </a>
                     </div>
-                    <div class = "play_teaser">
-                        <a style="color: darkblue;" href="action.php?action=play_teaser">Поиграть с дразнилкой</a><br>
+                    <div class = "play_teaser communication_action action">
+                        <a style="text-decoration: none;" href="action.php?action=play_teaser">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon play_teaser-icon" title="Поиграть с дразнилкой"></div>
+                        </a>
                     </div>
-                    <div class = "walking">
-                        <a style="color: darkblue;" href="action.php?action=walking">Вывести на прогулку</a><br><br><br>
+                    <div class = "walking communication_action action">
+                        <a style="text-decoration: none;" href="action.php?action=walking">
+                            <ul class = "timer dry_food-timer">
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                                <li>
+                                    <div class = "timer_part"></div>
+                                </li>
+                            </ul>
+                            <div class = "action-icon walking-icon" title="Вывести на прогулку"></div>
+                        </a>
                     </div>
                 </div>
+                    <div class="clearfix"></div>
                 <?php } ?>
-            </div>
+            </div><br><br>
 
             <div class = "indicators">
                 <div class = "food_satisfaction">

@@ -8,11 +8,6 @@ body {
     color: black;
     background: linear-gradient(to right, rgba(147, 161, 232, 0.55), rgba(117, 191, 232, 0.55));
 }
-.container {
-    display: block;
-    padding-top: 35px;
-    padding-bottom: 35px;
-}
 .start_page .container {
     display: block;
     width: 600px;
