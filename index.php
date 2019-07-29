@@ -1,3 +1,8 @@
+<?php
+require_once 'Game.php';
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,9 +14,8 @@
     <link rel="stylesheet" href="indicators.css">
 </head>
 <body>
+
 <?php
-require_once 'Game.php';
-session_start();
 
 if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
     $game = $_SESSION['game'];
