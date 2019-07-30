@@ -12,6 +12,7 @@
 .food_action {
     display: inline-block;
     margin-right: 10px;
+    position: relative;
 }
 .food_action:last-child {
     margin-right: 0;
@@ -22,10 +23,9 @@
     background: url("img/sprite.png") no-repeat;
     border-radius: 50px;
     display: block;
-    position: absolute;
-    top: 5px;
-    left: 5px;
+    position: relative;
     z-index: 2;
+    margin: 15px 0 0 14px;
 }
 .dry_food-icon {
     cursor: pointer;
@@ -118,25 +118,13 @@
     transform: rotate(288deg) skewY(162deg);
 }
 
-.timer li:first-child .timer_part {
-    background: green;
-}
-
-.timer li:nth-child(2) .timer_part {
-    background: tomato;
-}
-
-.timer li:nth-child(3) .timer_part {
-    background: aqua;
-}
-
-.timer li:nth-child(4) .timer_part {
-    background: yellow;
-}
-
-.timer li:nth-child(5) .timer_part {
+.timer .timer_part {
     background: blue;
+    border: 2px solid wheat;
 }
+
+
+
 .timer_border {
     position: absolute;
     top: 0;
@@ -148,4 +136,10 @@
     width: 100px;
     margin-right: 10px;
     position: relative;
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
 }

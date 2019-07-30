@@ -49,67 +49,21 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <div class = "food_actions">
                     <div class = "feed_dry food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_dry">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon dry_food-icon" title="Покормить сухим кормом"></div>
                         </a>
+                        <div title="Reloading">
+                            <svg id="arc" >
+
+                            </svg>
+                        </div>
                     </div>
                     <div class = "feed_wet food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_wet">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon wet_food-icon" title="Покормить влажным кормом"></div>
                         </a>
                     </div>
                     <div class = "feed_home food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_home">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon home_food-icon" title="Покормить домашней едой"></div>
                         </a>
                     </div>
@@ -117,89 +71,21 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <div class = "communication_actions">
                     <div class = "stroke communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=stroke">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon stroke-icon" title="Погладить"></div>
                         </a>
                     </div>
                     <div class = "play_mouse communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=play_mouse">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon play_mouse-icon" title="Поиграть с мышкой"></div>
                         </a>
                     </div>
                     <div class = "play_teaser communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=play_teaser">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon play_teaser-icon" title="Поиграть с дразнилкой"></div>
                         </a>
                     </div>
                     <div class = "walking communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=walking">
-                            <ul class = "timer dry_food-timer">
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                                <li>
-                                    <div class = "timer_part"></div>
-                                </li>
-                            </ul>
                             <div class = "action-icon walking-icon" title="Вывести на прогулку"></div>
                         </a>
                     </div>
@@ -243,7 +129,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
     <?php
     unset($game->message);
-} else {?>
+} else { ?>
     <div class = "start_page">
         <div class = "container">
             <div class = "main-header">
@@ -276,9 +162,17 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <img class = "start_image" src="img/two_cats.jpg">
         </div>
     </div>
+
+
 <?php } ?>
+<div title="Reloading">
+    <svg id="arc" >
+
+    </svg>
+</div>
 
 <script src="script.js"></script>
+<script src="arc-drawer.js"></script>
 
 </body>
 </html>
