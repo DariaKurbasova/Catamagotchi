@@ -51,16 +51,13 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <a style="text-decoration: none;" href="action.php?action=eat_dry">
                             <div class = "action-icon dry_food-icon" title="Покормить сухим кормом"></div>
                         </a>
-                        <div title="Reloading">
-                            <svg id="arc" >
-
-                            </svg>
-                        </div>
+                        <div class="reloading" data-reload-max="7" data-reload-left="3"></div>
                     </div>
                     <div class = "feed_wet food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_wet">
                             <div class = "action-icon wet_food-icon" title="Покормить влажным кормом"></div>
                         </a>
+                        <div class="reloading" data-reload-max="5" data-reload-left="4"></div>
                     </div>
                     <div class = "feed_home food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_home">
