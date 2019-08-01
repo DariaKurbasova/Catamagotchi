@@ -13,6 +13,12 @@ class Cat
     public $communication_change = 0;
     public $energy_change = 0;
 
+    public $dry_food_reload_left = 0;
+    public $wet_food_reload_left = 0;
+    public $stroke_reload_left = 0;
+    public $play_mouse_reload_left = 0;
+    public $play_teaser_reload_left = 0;
+    public $walking_reload_left = 0;
 
     CONST EAT_MESSAGE_LIKE = "Ммм, вкуснятина!";
     CONST EAT_MESSAGE_HATE = "Фу, ну и гадость!";
@@ -20,6 +26,14 @@ class Cat
     CONST COMMUNICATE_MESSAGE_HATE = "Отстань от меня!";
     CONST TIRED_OF_IT_MESSAGE = "Может, попробуешь что-нибудь другое?";
     CONST STOP_MESSAGE = "Хватит баловать котика, больше нельзя";
+
+    CONST DRY_FOOD_RELOAD = 5;
+    CONST WET_FOOD_RELOAD = 4;
+    CONST HOME_FOOD_LIMIT = 3;
+    CONST STROKE_RELOAD = 3;
+    CONST PLAY_MOUSE_RELOAD = 4;
+    CONST PLAY_TEASER_RELOAD = 5;
+    CONST WALKING_RELOAD = 5;
 
 
     /** @var Game */
@@ -50,12 +64,12 @@ class Cat
     // Покормить котика одним из 3 видов корма: сухой, влажный и домашний. Котан привередливый, не все корма любит одинково.
     public function feed ($food_type) {
         $this->food_change += 10;
-        $this->game->action_history[] = $food_type;
         if (!$this->checkSameActions("food")) {
             $probability_like = rand(1, 10);
 
             switch ($food_type) {
                 case "dry":
+                    $this->dry_food_reload_left = $this::DRY_FOOD_RELOAD - (array_count_values($this->game->action_history)["dry"] % $this::DRY_FOOD_RELOAD);
                     $this->energy_change += 5;
                     if ($probability_like == 10) {
                         $this->mood_change -= 10;
@@ -66,6 +80,7 @@ class Cat
                     }
                     break;
                 case "wet":
+                    $this->wet_food_reload_left = $this::WET_FOOD_RELOAD - (array_count_values($this->game->action_history)["wet"] % $this::WET_FOOD_RELOAD);
                     $this->energy_change += 10;
                     if ($probability_like > 5) {
                         $this->mood_change -= 10;
@@ -87,10 +102,12 @@ class Cat
             }
 
         }
+        $this->game->action_history[] = $food_type;
     }
 
     // Погладить
     public function stroke () {
+        $this->stroke_reload_left = $this::STROKE_RELOAD - (array_count_values($this->game->action_history)["stroke"] % $this::STROKE_RELOAD);
         $this->game->action_history[] = "stroke";
         if (!$this->checkSameActions("communication")) {
             $probability_like = rand(1, 10);
@@ -108,6 +125,7 @@ class Cat
     }
     // Поиграть с дразнилкой
     public function playTeaser () {
+        $this->play_teaser_reload_left = $this::PLAY_TEASER_RELOAD - (array_count_values($this->game->action_history)["play_teaser"] % $this::PLAY_TEASER_RELOAD);
         $this->game->action_history[] = "play_teaser";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -=20;
@@ -124,6 +142,7 @@ class Cat
     }
     // Поиграть с мышкой
     public function playMouse () {
+        $this->play_mouse_reload_left = $this::PLAY_MOUSE_RELOAD - (array_count_values($this->game->action_history)["play_mouse"] % $this::PLAY_MOUSE_RELOAD);
         $this->game->action_history[] = "play_mouse";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 20;
@@ -140,6 +159,7 @@ class Cat
     }
     // Вывести котика на прогулку
     public function walking () {
+        $this->walking_reload_left = $this::WALKING_RELOAD - (array_count_values($this->game->action_history)["walking"] % $this::WALKING_RELOAD);
         $this->game->action_history[] = "walking";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 25;

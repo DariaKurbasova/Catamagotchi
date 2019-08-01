@@ -17,6 +17,16 @@
 .food_action:last-child {
     margin-right: 0;
 }
+.action_title {
+    display: block;
+    width: 100px;
+    word-wrap: break-word;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    color: darkblue;
+    margin-top: 25px;
+}
 .action-icon {
     width: 80px;
     height: 80px;
@@ -25,12 +35,18 @@
     display: block;
     position: relative;
     z-index: 2;
+    left: 1px;
+    top: 15px;
     margin: 15px 0 0 14px;
+}
+.sleep-icon {
+    cursor: pointer;
+    background-position: 0 -160px;
+    border-radius: 0;
 }
 .dry_food-icon {
     cursor: pointer;
     background-position: -80px 0;
-    display: block;
 }
 .wet_food-icon {
     cursor: pointer;
@@ -71,75 +87,40 @@
     display: block;
     float: right;
 }
-
-.timer {
-    display: block;
-    position: relative;
-    border: 1px solid black;
-    padding: 0;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    list-style: none;
-    overflow: hidden;
-}
-.timer_part {
-    position: absolute;
-    left: -100%;
-    width: 200%;
-    height: 200%;
-}
-.timer li {
-    overflow: hidden;
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 100%;
-    transform-origin: 0 100%;
-}
-.timer li:first-child {
-    transform: rotate(0deg) skewY(162deg);
-}
-
-.timer li:nth-child(2) {
-    transform: rotate(72deg) skewY(162deg);
-}
-
-.timer li:nth-child(3) {
-    transform: rotate(144deg) skewY(162deg);
-}
-
-.timer li:nth-child(4) {
-    transform: rotate(216deg) skewY(162deg);
-}
-
-.timer li:nth-child(5) {
-    transform: rotate(288deg) skewY(162deg);
-}
-
-.timer .timer_part {
-    background: blue;
-    border: 2px solid wheat;
-}
-
-
-
-.timer_border {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-}
 .action a {
     display: block;
     width: 100px;
     margin-right: 10px;
     position: relative;
 }
-
 svg {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
+}
+.restart_game {
+    display: block;
+    word-wrap: break-word;
+    width: 160px;
+    height: 55px;
+    border: 2px solid darkblue;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+    background-color: #b4b7e8;
+    box-shadow: inset 0 0 5px 5px #6e6fc8;
+    padding-top: 5px;
+}
+.restart_game:hover {
+    background-color: #a2a5d7;
+    box-shadow: inset 0 0 5px 5px #6667bf;
+    color: #1b206c;
+}
+.restart_game:active {
+    background-color:#b4b7e8;
+    box-shadow: inset 0 0 5px 3px #6667bf;
+    color: #1c2179;
+    text-decoration: underline;
 }
