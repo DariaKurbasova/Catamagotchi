@@ -12,6 +12,8 @@ session_start();
     <link rel="stylesheet" href="start_page.css">
     <link rel="stylesheet" href="game_page.css">
     <link rel="stylesheet" href="indicators.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Underdog&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -53,7 +55,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <div class = "feed_dry food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_dry">
                             <div class = "action-icon dry_food-icon" title="Покормить сухим кормом"></div>
-                            <div class="reloading" data-reload-max="<?= $cat::DRY_FOOD_RELOAD ?>"
+                            <div class="reloading" data-reload-max="<?= $cat->max_reloads['eat_dry'] ?>"
                                  data-reload-left="<?= $game->cat->dry_food_reload_left ?>">
                             </div>
                         </a>
@@ -62,7 +64,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <div class = "feed_wet food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_wet">
                             <div class = "action-icon wet_food-icon" title="Покормить влажным кормом"></div>
-                            <div class="reloading" data-reload-max="<?= $cat::WET_FOOD_RELOAD ?>"
+                            <div class="reloading" data-reload-max="<?= $cat->max_reloads['eat_wet'] ?>"
                                  data-reload-left="<?= $game->cat->wet_food_reload_left ?>">
                             </div>
                         </a>
@@ -79,7 +81,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <div class = "stroke communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=stroke">
                             <div class = "action-icon stroke-icon" title="Погладить"></div>
-                            <div class="reloading" data-reload-max="<?= $cat::STROKE_RELOAD ?>"
+                            <div class="reloading" data-reload-max="<?= $cat->max_reloads['stroke'] ?>"
                                  data-reload-left="<?= $game->cat->stroke_reload_left ?>">
                             </div>
                             <p class = "action_title"><br>Погладить</p>
@@ -88,7 +90,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <div class = "play_mouse communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=play_mouse">
                             <div class = "action-icon play_mouse-icon" title="Поиграть с мышкой"></div>
-                            <div class="reloading" data-reload-max="<?= $cat::PLAY_MOUSE_RELOAD ?>"
+                            <div class="reloading" data-reload-max="<?= $cat->max_reloads['play_mouse'] ?>"
                                  data-reload-left="<?= $game->cat->play_mouse_reload_left ?>">
                             </div>
                         </a>
@@ -97,7 +99,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <div class = "play_teaser communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=play_teaser">
                             <div class = "action-icon play_teaser-icon" title="Поиграть с дразнилкой"></div>
-                            <div class="reloading" data-reload-max="<?= $cat::PLAY_TEASER_RELOAD ?>"
+                            <div class="reloading" data-reload-max="<?= $cat->max_reloads['play_teaser'] ?>"
                                  data-reload-left="<?= $game->cat->play_teaser_reload_left ?>">
                             </div>
                         </a>
@@ -106,7 +108,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <div class = "walking communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=walking">
                             <div class = "action-icon walking-icon" title="Вывести на прогулку"></div>
-                            <div class="reloading" data-reload-max="<?= $cat::WALKING_RELOAD ?>"
+                            <div class="reloading" data-reload-max="<?= $cat->max_reloads['walking'] ?>"
                                  data-reload-left="<?= $game->cat->walking_reload_left ?>">
                             </div>
                         </a>
@@ -119,25 +121,25 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
             <div class = "indicators">
                 <div class = "food_satisfaction">
-                    Сытость: <?= $cat->food ?>
+                    <b>Сытость: <?= $cat->food ?></b>
                     <div class = "indicator food_indicator glow">
                         <span style = "width: <?= $cat->food - $cat->food_change ?>%;" data-width="<?= $cat->food ?>"></span>
                     </div>
                 </div>
                 <div class = "communication_satisfaction">
-                    Общение: <?= $game->cat->communication ?>
+                    <b>Общение: <?= $game->cat->communication ?></b>
                     <div class = "indicator communication_indicator glow">
                         <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->communication ?>"></span>
                     </div>
                 </div>
                 <div class = "energy_satisfaction">
-                    Энергия: <?= $game->cat->energy ?>
+                    <b>Энергия: <?= $game->cat->energy ?></b>
                     <div class = "indicator energy_indicator glow">
                         <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->energy ?>"></span>
                     </div>
                 </div>
                 <div class = "mood">
-                    Настроение: <?= $game->cat->mood ?>
+                    <b>Настроение: <?= $game->cat->mood ?></b>
                     <div class = "indicator mood_indicator glow">
                         <span style = "width: <?= $cat->mood - $cat->mood_change ?>%;" data-width="<?= $cat->mood ?>"></span>
                     </div>

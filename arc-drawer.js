@@ -73,7 +73,6 @@ function drawArcs(svgDiv, totalArcs, filledCount) {
 
 let reloadDivs = document.querySelectorAll('div.reloading');
 reloadDivs.forEach(el => {
-    console.log(el);
     let dataset = el.dataset;
     if (dataset && dataset.reloadLeft && dataset.reloadMax && parseInt(dataset.reloadLeft) > 0) {
         el.setAttribute('title', 'Перезаряжается, осталось ходов: ' + dataset.reloadLeft + ' из ' + dataset.reloadMax);
