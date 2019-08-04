@@ -11,7 +11,7 @@ session_start();
     <link rel="icon" type="image/png" href="img/Cat-icon.png" />
     <link rel="stylesheet" href="start_page.css">
     <link rel="stylesheet" href="game_page.css">
-    <link rel="stylesheet" href="indicators.css">
+    <link rel="stylesheet" href="indicators_and_message.css">
 
     <link href="https://fonts.googleapis.com/css?family=Underdog&display=swap" rel="stylesheet">
 </head>
@@ -28,9 +28,6 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 //     var_dump($game);
 //     echo "<br>";
 
-    if (!empty($game->message)) {
-        echo "<br>" . $game->message;
-    }
     ?>
     <div class = "game_page">
         <div class = "container">
@@ -41,7 +38,6 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             </div>
             <p style="display: none;" class = "instruction">Инструкция к игре</p>
             <div style="display: none;" class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
-            <br>
             <div class = "actions">
                 <?php if (count($game->action_history) % 4 == 3) { ?>
                     <div class = "sleep action">
@@ -145,8 +141,10 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     </div>
                 </div>
             </div>
-            <br><br>
-            <div class = "restart_game">
+            <img class = "main_image" src="img/in_package.jpg">
+            <p class="message"><b><?= $game->message ?></b></p>
+            <div class="clearfix"></div>
+            <div class = "restart_game" >
                 <a style="text-decoration: none; color: #070866;" href="action.php?action=start_game&name=<?= $cat->name ?>">Начать игру с котиком заново</a><br><br>
             </div>
         </div>
