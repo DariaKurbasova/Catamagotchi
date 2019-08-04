@@ -20,6 +20,16 @@ class Cat
     public $play_teaser_reload_left = 0;
     public $walking_reload_left = 0;
 
+    public $reloads_left = [];
+    public $max_reloads = [
+        'eat_dry' => 5,
+        'eat_wet' => 4,
+        'stroke' => 3,
+        'play_teaser' => 5,
+        'play_mouse' => 4,
+        'walking' => 5
+    ];
+
     CONST EAT_MESSAGE_LIKE = "Ммм, вкуснятина!";
     CONST EAT_MESSAGE_HATE = "Фу, ну и гадость!";
     CONST COMMUNICATE_MESSAGE_LIKE = "Люблю тебя, человек!";
@@ -27,13 +37,6 @@ class Cat
     CONST TIRED_OF_IT_MESSAGE = "Может, попробуешь что-нибудь другое?";
     CONST STOP_MESSAGE = "Хватит баловать котика, больше нельзя";
 
-    CONST DRY_FOOD_RELOAD = 5;
-    CONST WET_FOOD_RELOAD = 4;
-    CONST HOME_FOOD_LIMIT = 3;
-    CONST STROKE_RELOAD = 3;
-    CONST PLAY_MOUSE_RELOAD = 4;
-    CONST PLAY_TEASER_RELOAD = 5;
-    CONST WALKING_RELOAD = 5;
 
 
     /** @var Game */
@@ -69,7 +72,6 @@ class Cat
 
             switch ($food_type) {
                 case "dry":
-                    $this->dry_food_reload_left = $this::DRY_FOOD_RELOAD - (array_count_values($this->game->action_history)["dry"] % $this::DRY_FOOD_RELOAD);
                     $this->energy_change += 5;
                     if ($probability_like == 10) {
                         $this->mood_change -= 10;
@@ -80,7 +82,6 @@ class Cat
                     }
                     break;
                 case "wet":
-                    $this->wet_food_reload_left = $this::WET_FOOD_RELOAD - (array_count_values($this->game->action_history)["wet"] % $this::WET_FOOD_RELOAD);
                     $this->energy_change += 10;
                     if ($probability_like > 5) {
                         $this->mood_change -= 10;
@@ -107,7 +108,6 @@ class Cat
 
     // Погладить
     public function stroke () {
-        $this->stroke_reload_left = $this::STROKE_RELOAD - (array_count_values($this->game->action_history)["stroke"] % $this::STROKE_RELOAD);
         $this->game->action_history[] = "stroke";
         if (!$this->checkSameActions("communication")) {
             $probability_like = rand(1, 10);
@@ -125,7 +125,6 @@ class Cat
     }
     // Поиграть с дразнилкой
     public function playTeaser () {
-        $this->play_teaser_reload_left = $this::PLAY_TEASER_RELOAD - (array_count_values($this->game->action_history)["play_teaser"] % $this::PLAY_TEASER_RELOAD);
         $this->game->action_history[] = "play_teaser";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -=20;
@@ -142,7 +141,6 @@ class Cat
     }
     // Поиграть с мышкой
     public function playMouse () {
-        $this->play_mouse_reload_left = $this::PLAY_MOUSE_RELOAD - (array_count_values($this->game->action_history)["play_mouse"] % $this::PLAY_MOUSE_RELOAD);
         $this->game->action_history[] = "play_mouse";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 20;
@@ -159,7 +157,6 @@ class Cat
     }
     // Вывести котика на прогулку
     public function walking () {
-        $this->walking_reload_left = $this::WALKING_RELOAD - (array_count_values($this->game->action_history)["walking"] % $this::WALKING_RELOAD);
         $this->game->action_history[] = "walking";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 25;
@@ -207,8 +204,32 @@ class Cat
             $value = 0;
         }
     }
+// Делаем действие "покормить сухим кормом". Записываем его в массив с 1, к остальным имеющимся прибавляем +1.
+// Проверяем каждый элемент на максимальную перезарядку. Если он становится равен ей - исключаем его из массива.
+
+    public function reloadLeft ($action) {
+        if (empty($this->reloads_left[$action])) {
+            $this->reloads_left[$action] = 0;
+        }
+        foreach ($this->reloads_left as $reload => $left) {
+            if ($left < $this->max_reloads[$reload]) {
+                $this->reloads_left[$reload]++;
+            }
+            if ($left == $this->max_reloads[$reload]) {
+                unset($this->reloads_left[$reload]);
+            }
+        }
+        $this->dry_food_reload_left = (empty($this->reloads_left['eat_dry'])) ? 0 : $this->reloads_left['eat_dry'];
+        $this->wet_food_reload_left = (empty($this->reloads_left['eat_wet'])) ? 0 : $this->reloads_left['eat_wet'];
+        $this->stroke_reload_left = (empty($this->reloads_left['stroke'])) ? 0 : $this->reloads_left['stroke'];
+        $this->play_mouse_reload_left = (empty($this->reloads_left['play_mouse'])) ? 0 : $this->reloads_left['play_mouse'];
+        $this->play_teaser_reload_left = (empty($this->reloads_left['play_teaser'])) ? 0 : $this->reloads_left['play_teaser'];
+        $this->walking_reload_left = (empty($this->reloads_left['walking'])) ? 0 : $this->reloads_left['walking'];
+    }
 
     public function runAction($action_type) {
+        $this->reloadLeft($action_type);
+
         $this->mood_change = 0;
         $this->food_change = 0;
         $this->communication_change = 0;
