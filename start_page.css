@@ -2,11 +2,18 @@ body {
     min-width: 1120px;
     margin: 0;
     padding: 0;
-    font-family: Trebuchet MS, sans-serif;
+    font-family: 'Underdog', cursive;
+    letter-spacing: 1px;
     font-size: 16px;
     line-height: 24px;
     color: black;
     background: linear-gradient(to right, rgba(147, 161, 232, 0.55), rgba(117, 191, 232, 0.55));
+}
+@font-face {
+    font-family: "Cheshirskiy Cat Roman";
+    src: url("fonts/Cheshirskiy_cat_roman.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
 }
 .start_page .container {
     display: block;
@@ -31,6 +38,8 @@ body {
     font-size: 50px;
     line-height: 55px;
     color: #070866;
+    font-family: "Cheshirskiy Cat Roman", Roman;
+    letter-spacing: 5px;
 }
 .clearfix {
     clear: both;
@@ -48,6 +57,7 @@ body {
     border: 2px solid #3a373e;
     box-shadow: 0 0 10px 5px #494a87;
     border-radius: 10px;
+    letter-spacing: 0;
 }
 .start_game_form label {
     font-size: 25px;
@@ -61,6 +71,9 @@ body {
     font-size: 18px;
     padding-left: 5px;
     padding-top: 2px;
+    font-family: Underdog, cursive;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 .start_game_button {
     height: 30px;
@@ -68,6 +81,8 @@ body {
     font-size: 18px;
     line-height: 25px;
     font-weight: bold;
+    font-family: Underdog, cursive;
+    letter-spacing: 1px;
 }
 .start_image {
     width: 300px;
