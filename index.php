@@ -131,7 +131,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <div class = "energy_satisfaction">
                     <b>Энергия: <?= $cat->energy ?></b>
                     <div class = "indicator energy_indicator glow">
-                        <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->energy ?>"></span>
+                        <span style = "width: <?= $cat->energy - $cat->energy_change ?>%;" data-width="<?= $cat->energy ?>"></span>
                     </div>
                 </div>
                 <div class = "mood">
