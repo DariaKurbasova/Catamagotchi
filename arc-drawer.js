@@ -4,15 +4,14 @@ const SVG_SIZE = (RADIUS + OFFSET) * 2;
 
 // Тут можно придумать какую-то фиксированную цветовую схему, чтобы каждое деление чуть отличалось цветом.
 // Проще всего использовать rgba, выбрать один цвет и менять лишь прозрачность
-const COLORS_FILLED = [
+const COLORS = [
     'rgba(20, 20, 200, 0.5)',
-    '#bbf',
-    '#99d',
+    '#2311c8',
+    '#443cd6',
+    '#5859df',
+    '#6e6dd7',
     '#88c',
-    '#66b',
-    '#44b',
-    '#2323d5',
-    '#000097',
+    '#bbf',
 ];
 
 /**
@@ -25,8 +24,8 @@ const COLORS_FILLED = [
 function drawArc(svgDiv, angleFrom, angleTo, color) {
     let centerX = RADIUS + OFFSET;
     let centerY = RADIUS + OFFSET;
-    let start = polarToCartesian(centerX, centerY, angleFrom);
-    let end = polarToCartesian(centerX, centerY, angleTo);
+    let start = polarToCartesian(centerX, centerY, (angleFrom + 5));
+    let end = polarToCartesian(centerX, centerY, (angleTo - 5));
 
     let path = document.createElement('path');
     path.setAttribute('stroke-width', '8');
@@ -61,13 +60,12 @@ function polarToCartesian(centerX, centerY, angleInDegrees) {
  * Рисует несколько дуг
  * @param svgDiv   Блок svg, в котором рисуем
  * @param totalArcs  Общее количество дуг
- * @param filledCount  Сколько из них закрашены (тут логику надо продумать)
+ * @param filledCount  Сколько из них не закрашены (тут логику надо продумать)
  */
 function drawArcs(svgDiv, totalArcs, filledCount) {
     let angle = 360 / totalArcs;
     for (let i = 1; i <= totalArcs; i++) {
-        // todo - Придумать, как выделять закрашенные и незакрашенные деления (цвета, прозрачность?)
-        drawArc(svgDiv, (i - 1) * angle, i * angle, i > filledCount ? COLORS_FILLED[i] : 'white');
+        drawArc(svgDiv, (i - 1) * angle, i * angle, i <= (totalArcs - filledCount) ? COLORS[i] : 'rgba(255, 255, 255, 0.7)');
     }
 }
 
