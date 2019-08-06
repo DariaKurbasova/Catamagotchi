@@ -6,21 +6,13 @@ const SVG_SIZE = (RADIUS + OFFSET) * 2;
 // Проще всего использовать rgba, выбрать один цвет и менять лишь прозрачность
 const COLORS_FILLED = [
     'rgba(20, 20, 200, 0.5)',
+    '#bbf',
     '#99d',
     '#88c',
     '#66b',
     '#44b',
     '#2323d5',
     '#000097',
-];
-const COLORS_NOT_FILLED = [
-    'rgba(131, 57, 161, 0.5)',
-    '#e8bde2',
-    '#cb8ed2',
-    '#c576d2',
-    '#af4ad2',
-    '#9a02cc',
-    '#7902A9',
 ];
 
 /**
@@ -75,7 +67,7 @@ function drawArcs(svgDiv, totalArcs, filledCount) {
     let angle = 360 / totalArcs;
     for (let i = 1; i <= totalArcs; i++) {
         // todo - Придумать, как выделять закрашенные и незакрашенные деления (цвета, прозрачность?)
-        drawArc(svgDiv, (i - 1) * angle, i * angle, i > filledCount ? COLORS_FILLED[i] : COLORS_NOT_FILLED[i]);
+        drawArc(svgDiv, (i - 1) * angle, i * angle, i > filledCount ? COLORS_FILLED[i] : 'white');
     }
 }
 
