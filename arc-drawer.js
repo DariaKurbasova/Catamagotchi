@@ -12,6 +12,7 @@ const COLORS = [
     '#6e6dd7',
     '#88c',
     '#bbf',
+    
 ];
 
 /**
