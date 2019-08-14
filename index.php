@@ -25,8 +25,8 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
     $cat = $game->cat;
 
-     echo(count($game->action_history));
-     echo "<br>";
+//     echo(count($game->action_history));
+//     echo "<br>";
 
     ?>
     <div class = "game_page">
