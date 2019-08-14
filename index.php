@@ -25,8 +25,8 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
     $cat = $game->cat;
 
-//     var_dump($game);
-//     echo "<br>";
+     echo(count($game->action_history));
+     echo "<br>";
 
     ?>
     <div class = "game_page">
@@ -39,7 +39,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <p style="display: none;" class = "instruction">Инструкция к игре</p>
             <div style="display: none;" class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
             <div class = "actions">
-                <?php if (count($game->action_history) % 4 == 3) { ?>
+                <?php if (count($game->action_history) % 5 == 4) { ?>
                     <div class = "sleep action">
                         <a style="text-decoration: none;" href="action.php?action=sleep">
                             <div class = "action-icon sleep-icon" title="Котик хочет спать!"></div>
@@ -141,7 +141,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     </div>
                 </div>
             </div>
-            <img class = "main_image" src="img/in_package.jpg">
+            <img class = "main_image" src="<?= $game->getImage() ?>">
             <p class="message"><b><?= $game->message ?></b></p>
             <div class="clearfix"></div>
             <div class = "restart_game" >
