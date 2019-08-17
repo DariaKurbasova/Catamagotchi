@@ -36,6 +36,11 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <h1 class = "game_title">КОТамагочи</h1>
                 <div class="clearfix"></div>
             </div>
+
+            <?php if ($game->checkGameEnd()) { ?>
+                <p class = "gameover_message"> <?= $game->checkGameEnd() ?> </p>
+                <img class = "gameover_image" src="<?= $game->gameover_image ?>">
+            <?php } else { ?>
             <p style="display: none;" class = "instruction">Инструкция к игре</p>
             <div style="display: none;" class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
             <div class = "actions">
@@ -142,8 +147,9 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 </div>
             </div>
             <img class = "main_image" src="<?= $game->getImage() ?>">
-            <p class="message"><b><?= $game->message ?></b></p>
+            <p class="message"><b><?= $game->getMessage() ?></b></p>
             <div class="clearfix"></div>
+            <?php } ?>
             <div class = "restart_game" >
                 <a style="text-decoration: none; color: #070866;" href="action.php?action=start_game&name=<?= $cat->name ?>">Начать игру с котиком заново</a><br><br>
             </div>

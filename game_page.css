@@ -139,3 +139,17 @@ svg {
 .message {
     float: left;
 }
+.gameover_message {
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    display: block;
+    width: 600px;
+}
+.gameover_image {
+    width: 400px;
+    margin: 10px 100px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px #3a373e;
+}
