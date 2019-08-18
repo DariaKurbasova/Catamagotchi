@@ -19,7 +19,7 @@
 }
 .action_title {
     display: block;
-    width: 100px;
+    width: 110px;
     word-wrap: break-word;
     text-align: center;
     line-height: 20px;
@@ -102,7 +102,7 @@ svg {
 .restart_game {
     display: block;
     word-wrap: break-word;
-    width: 160px;
+    width: 170px;
     height: 55px;
     border: 2px solid darkblue;
     border-radius: 10px;
