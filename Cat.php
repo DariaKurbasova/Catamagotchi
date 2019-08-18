@@ -61,6 +61,7 @@ class Cat
     public function feed ($food_type) {
         if (!$this->checkSameActions("food")) {
             $this->food_change += 10;
+            $this->communication_change -= 5;
             $probability_like = rand(1, 10);
 
             switch ($food_type) {
@@ -112,6 +113,7 @@ class Cat
     // Погладить
     public function stroke () {
         if (!$this->checkSameActions("communication")) {
+            $this->food_change -= 5;
             if ($this->getReloadLeft('stroke') != 0) {
                 $probability_like = rand(1, 10);
                 if ($probability_like > 5) {
@@ -135,6 +137,7 @@ class Cat
     // Поиграть с дразнилкой
     public function playTeaser () {
         if (!$this->checkSameActions("communication")) {
+            $this->food_change -= 15;
             if ($this->getReloadLeft('play_teaser') != 0) {
                 $this->energy_change -= 20;
                 $probability_like = rand(1, 10);
@@ -156,6 +159,7 @@ class Cat
     // Поиграть с мышкой
     public function playMouse () {
         if (!$this->checkSameActions("communication")) {
+            $this->food_change -= 15;
             if ($this->getReloadLeft('play_mouse')) {
                 $this->energy_change -= 20;
                 $probability_like = rand(1, 10);
@@ -176,6 +180,7 @@ class Cat
     }
     // Вывести котика на прогулку
     public function walking () {
+        $this->food_change -= 15;
         $this->game->action_history[] = "walking";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 25;
@@ -188,14 +193,14 @@ class Cat
     // Сброс показателей ночью (каждое 4-е действие - сон)
     public function sleep () {
         $this->game->action_history[] = "sleep";
-        $this->food_change = -10;
+        $this->food_change = -15;
         if ($this->food > 60) {
             $this->food_change -= round(($this->food - 60) / 5);
         }
         if ($this->food > 90) {
             $this->food_change -= round(($this->food - 90) / 5);
         }
-        $this->communication_change = -10;
+        $this->communication_change = -20;
         if ($this->communication > 60) {
             $this->communication_change -= round(($this->communication - 60) / 5);
         }
