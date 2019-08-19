@@ -34,6 +34,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <div class = "main-header">
                 <img class="game_icon" src="img/Cat-icon.png">
                 <h1 class = "game_title">КОТамагочи</h1>
+                <button class = "show-instruction" name = "show-instruction">Показать/скрыть инструкцию к игре</button>
                 <div class="clearfix"></div>
             </div>
 
@@ -41,7 +42,27 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <p class = "gameover_message"> <?= $game->checkGameEnd() ?> </p>
                 <img class = "gameover_image" src="<?= $game->gameover_image ?>">
             <?php } else { ?>
-            <p style="display: none;" class = "instruction">Инструкция к игре</p>
+            <div class = "instruction hidden">
+                <h2>Инструкция к игре</h2>
+                <p>
+                    Цель игры очень проста – вам нужно добиться, чтобы все показатели благополучия котика были не меньше 80.
+                    За это котик отплатит вам любовью, и вы заслужите репутацию заботливого хозяина.
+                </p>
+                <p>
+                    Для этого вам нужно будет удовлетворять потребности питомца: кормить его, гладить, играть с ним и выводить на прогулку.
+                    Учтите, что после совершения какого-либо действия котику необходимо перезарядить свои желания,
+                    поэтому несколько ходов это действие будет доступно только с небольшим штрафом.
+                </p>
+                <p>
+                    Ваши действия могут приниматься котиком благосклонно, а могут быть отвергнуты. Не обижайтесь на любимца за это, он не со зла :)
+                    Также повторив одно и то же действие 3 раза, вы рискуете сильно испортить настроение котику.
+                </p>
+                <p>
+                    Что будет, если какой-либо из показателей достигнет отметки 10 и ниже? Не советую вам это проверять.
+                    Вам же не хочется испытать чувство вины за плохую заботу о питомце, верно?
+                </p>
+            </div>
+
             <div style="display: none;" class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
             <div class = "actions">
                 <?php if (count($game->action_history) % 5 == 4) { ?>
@@ -183,6 +204,11 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
     </div>
 <?php } ?>
 
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+</script>
 <script src="script.js"></script>
 <script src="arc-drawer.js"></script>
 

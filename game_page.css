@@ -153,3 +153,52 @@ svg {
     border-radius: 10px;
     box-shadow: 10px 10px 10px #3a373e;
 }
+.show-instruction {
+    display: block;
+    word-wrap: break-word;
+    width: 205px;
+    height: 70px;
+    border: 2px solid darkblue;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+    background-color: #b4b7e8;
+    box-shadow: inset 0 0 5px 5px #6e6fc8;
+    font-family: 'Underdog', cursive;
+    padding: 10px 5px;
+    letter-spacing: 1px;
+    line-height: 22px;
+    float: right;
+    margin: 20px 100px 0 0;
+}
+.show-instruction:hover {
+    background-color: #a2a5d7;
+    box-shadow: inset 0 0 5px 5px #6667bf;
+    color: #1b206c;
+}
+.show-instruction:active {
+    background-color:#b4b7e8;
+    box-shadow: inset 0 0 5px 3px #6667bf;
+    color: #1c2179;
+    text-decoration: underline;
+}
+.instruction {
+    width: 800px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px 20px;
+    border-radius: 30px;
+}
+.instruction p {
+    text-align: justify;
+    text-indent: 35px;
+    font-weight: bold;
+}
+.instruction h2 {
+    text-align: center;
+    text-decoration: underline;
+}
+.hidden {
+    display: none;
+}

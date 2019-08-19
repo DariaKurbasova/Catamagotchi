@@ -8,3 +8,8 @@ function showIndicator(indicatorSelector) {
     let width = indicator.dataset.width + '%';
     indicator.style.width = width;
 }
+
+
+$('.show-instruction').click (function () {
+    $('.instruction').toggleClass('hidden');
+});
