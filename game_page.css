@@ -113,6 +113,7 @@ svg {
     box-shadow: inset 0 0 5px 5px #6e6fc8;
     padding-top: 5px;
     margin-top: 10px;
+    cursor: pointer;
 }
 .restart_game:hover {
     background-color: #a2a5d7;
@@ -171,6 +172,7 @@ svg {
     line-height: 22px;
     float: right;
     margin: 20px 100px 0 0;
+    cursor: pointer;
 }
 .show-instruction:hover {
     background-color: #a2a5d7;
@@ -182,6 +184,9 @@ svg {
     box-shadow: inset 0 0 5px 3px #6667bf;
     color: #1c2179;
     text-decoration: underline;
+}
+.show-instruction:focus {
+    outline: none;
 }
 .instruction {
     width: 800px;
@@ -199,6 +204,54 @@ svg {
     text-align: center;
     text-decoration: underline;
 }
-.hidden {
-    display: none;
+.tooltip{
+    display: inline;
+    position: relative;
+}
+.tooltip:hover:after{
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    color: #fff;
+    bottom: 70%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 250px;
+    font-size: 12px;
+    line-height: 17px;
+}
+.tooltip:hover:before{
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 62%;
+    content: "";
+    left: 30%;
+    position: absolute;
+    z-index: 99;
+}
+.feed_dry .tooltip:hover:after {
+    content: 'Дает небольшой бонус, но почти всегда нравится котику.';
+}
+.feed_wet .tooltip:hover:after {
+    content: 'Не самый любимый корм котика, но уж если ему захотелось влажного корма, то бонус будет хороший.';
+}
+.feed_home .tooltip:hover:after {
+    content: 'Это настоящий деликатес, дающий значительный бонус. Но домашней едой можно кормить не более 3 раз за игру.';
+}
+.stroke .tooltip:hover:after {
+    content: 'Поглаживания успокаивают котика, но далеко не всегда приходятся ему по душе.';
+}
+.play_mouse .tooltip:hover:after {
+    content: 'Менее предпочтительная игрушка, чем дразнилка, но зато чуть меньше утомляет котика.';
+}
+.play_teaser .tooltip:hover:after {
+    content: 'Это отличный способ развлечь котика, он почти никогда не против побегать за дразнилкой.';
+}
+.walking .tooltip:hover:after {
+    content: 'Самое увлекательное, что вы можете предложить своему любимцу – это вывести его на прогулку.';
+}
+.sleep .tooltip:hover:after {
+    content: 'Во время сна происходит восстановление энергии и небольшой сброс остальных показателей.';
 }

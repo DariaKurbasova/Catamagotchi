@@ -159,9 +159,9 @@ class Cat
     // Поиграть с мышкой
     public function playMouse () {
         if (!$this->checkSameActions("communication")) {
-            $this->food_change -= 15;
+            $this->food_change -= 10;
             if ($this->getReloadLeft('play_mouse')) {
-                $this->energy_change -= 20;
+                $this->energy_change -= 15;
                 $probability_like = rand(1, 10);
                 if ($probability_like > 6) {
                     $this->mood_change -= 10;

@@ -31,18 +31,26 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
     ?>
     <div class = "game_page">
         <div class = "container">
+
+            <?php if ($game->checkGameEnd()) { ?>
             <div class = "main-header">
                 <img class="game_icon" src="img/Cat-icon.png">
                 <h1 class = "game_title">КОТамагочи</h1>
-                <button class = "show-instruction" name = "show-instruction">Показать/скрыть инструкцию к игре</button>
                 <div class="clearfix"></div>
             </div>
 
-            <?php if ($game->checkGameEnd()) { ?>
                 <p class = "gameover_message"> <?= $game->checkGameEnd() ?> </p>
                 <img class = "gameover_image" src="<?= $game->gameover_image ?>">
             <?php } else { ?>
-            <div class = "instruction hidden">
+
+            <div class = "main-header">
+                <img class="game_icon" src="img/Cat-icon.png">
+                <h1 class = "game_title">КОТамагочи</h1>
+                <button class = "show-instruction" style = "color: #070866;" name = "show-instruction">Показать/скрыть инструкцию к игре</button>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class = "instruction" style = "display: none">
                 <h2>Инструкция к игре</h2>
                 <p>
                     Цель игры очень проста – вам нужно добиться, чтобы все показатели благополучия котика были не меньше 80.
@@ -67,7 +75,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <div class = "actions">
                 <?php if (count($game->action_history) % 5 == 4) { ?>
                     <div class = "sleep action">
-                        <a style="text-decoration: none;" href="action.php?action=sleep">
+                        <a style="text-decoration: none;" href="action.php?action=sleep" class="tooltip">
                             <div class = "action-icon sleep-icon" title="Котик хочет спать!"></div>
                         </a>
                         <p class = "action_title">Котик хочет спать!</p>
@@ -75,8 +83,8 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 <?php } else { ?>
                 <div class = "food_actions">
                     <div class = "feed_dry food_action action">
-                        <a style="text-decoration: none;" href="action.php?action=eat_dry">
-                            <div class = "action-icon dry_food-icon" title="Покормить сухим кормом"></div>
+                        <a style="text-decoration: none;" href="action.php?action=eat_dry" class = "tooltip">
+                            <div class = "action-icon dry_food-icon"></div>
                             <div class="reloading" data-reload-max="<?= $cat->max_reloads['eat_dry'] ?>"
                                  data-reload-left="<?= $cat->getReloadLeft('eat_dry') ?>">
                             </div>
@@ -84,7 +92,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <p class = "action_title">Покормить сухим кормом</p>
                     </div>
                     <div class = "feed_wet food_action action">
-                        <a style="text-decoration: none;" href="action.php?action=eat_wet">
+                        <a style="text-decoration: none;" href="action.php?action=eat_wet" class = "tooltip">
                             <div class = "action-icon wet_food-icon" title="Покормить влажным кормом"></div>
                             <div class="reloading" data-reload-max="<?= $cat->max_reloads['eat_wet'] ?>"
                                  data-reload-left="<?= $cat->getReloadLeft('eat_wet') ?>">
@@ -93,7 +101,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <p class = "action_title">Покормить влажным кормом</p>
                     </div>
                     <div class = "feed_home food_action action">
-                        <a style="text-decoration: none;" href="action.php?action=eat_home">
+                        <a style="text-decoration: none;" href="action.php?action=eat_home" class = "tooltip">
                             <div class = "action-icon home_food-icon" title="Покормить домашней едой"></div>
                         </a>
                         <p class = "action_title">Покормить домашней едой</p>
@@ -101,7 +109,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                 </div>
                 <div class = "communication_actions">
                     <div class = "stroke communication_action action">
-                        <a style="text-decoration: none;" href="action.php?action=stroke">
+                        <a style="text-decoration: none;" href="action.php?action=stroke" class = "tooltip">
                             <div class = "action-icon stroke-icon" title="Погладить"></div>
                             <div class="reloading" data-reload-max="<?= $cat->max_reloads['stroke'] ?>"
                                  data-reload-left="<?= $cat->getReloadLeft('stroke') ?>">
@@ -110,7 +118,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         </a>
                     </div>
                     <div class = "play_mouse communication_action action">
-                        <a style="text-decoration: none;" href="action.php?action=play_mouse">
+                        <a style="text-decoration: none;" href="action.php?action=play_mouse" class = "tooltip">
                             <div class = "action-icon play_mouse-icon" title="Поиграть с мышкой"></div>
                             <div class="reloading" data-reload-max="<?= $cat->max_reloads['play_mouse'] ?>"
                                  data-reload-left="<?= $cat->getReloadLeft('play_mouse') ?>">
@@ -119,7 +127,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <p class = "action_title">Поиграть с мышкой</p>
                     </div>
                     <div class = "play_teaser communication_action action">
-                        <a style="text-decoration: none;" href="action.php?action=play_teaser">
+                        <a style="text-decoration: none;" href="action.php?action=play_teaser" class = "tooltip">
                             <div class = "action-icon play_teaser-icon" title="Поиграть с дразнилкой"></div>
                             <div class="reloading" data-reload-max="<?= $cat->max_reloads['play_teaser'] ?>"
                                  data-reload-left="<?= $cat->getReloadLeft('play_teaser') ?>">
@@ -128,7 +136,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <p class = "action_title">Поиграть с дразнилкой</p>
                     </div>
                     <div class = "walking communication_action action">
-                        <a style="text-decoration: none;" href="action.php?action=walking">
+                        <a style="text-decoration: none;" href="action.php?action=walking" class = "tooltip">
                             <div class = "action-icon walking-icon" title="Вывести на прогулку"></div>
                             <div class="reloading" data-reload-max="<?= $cat->max_reloads['walking'] ?>"
                                  data-reload-left="<?= $cat->getReloadLeft('walking') ?>">

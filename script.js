@@ -11,5 +11,6 @@ function showIndicator(indicatorSelector) {
 
 
 $('.show-instruction').click (function () {
-    $('.instruction').toggleClass('hidden');
+    $('.instruction').fadeToggle(500);
 });
+
