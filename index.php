@@ -182,6 +182,12 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <div class = "restart_game" >
                 <a style="text-decoration: none; color: #070866;" href="action.php?action=start_game&name=<?= $cat->name ?>">Начать игру с котиком заново</a><br><br>
             </div>
+
+            <footer>
+                <hr style="border: 1px solid #00006b; margin-bottom: 0">
+                <p class = "author_name">Автор проекта - Курбасова Дарья</p>
+                <p class = "rights">Все права защищены</p>
+            </footer>
         </div>
     </div>
 
