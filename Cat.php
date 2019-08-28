@@ -105,6 +105,7 @@ class Cat
     public function stroke () {
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 5;
+            $this->communication_change += 10;
             if ($this->getReloadLeft('stroke') != 0) {
                 if ($this->actionDice > 5) {
                     $this->mood_change -= 10;
@@ -115,7 +116,6 @@ class Cat
                     $this->energy_change += 15;
                     $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
                 }
-                $this->communication_change += 10;
             } else {
                 $this->mood_change += 15;
                 $this->energy_change += 10;
@@ -128,6 +128,7 @@ class Cat
     public function playTeaser () {
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 15;
+            $this->communication_change += 10;
             if ($this->getReloadLeft('play_teaser') != 0) {
                 $this->energy_change -= 20;
                 if ($this->actionDice > 8) {
@@ -137,7 +138,6 @@ class Cat
                     $this->mood_change += 15;
                     $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
                 }
-                $this->communication_change += 10;
             } else {
                 $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
@@ -149,6 +149,7 @@ class Cat
     public function playMouse () {
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 10;
+            $this->communication_change += 10;
             if ($this->getReloadLeft('play_mouse')) {
                 $this->energy_change -= 15;
                 if ($this->actionDice > 6) {
@@ -158,7 +159,6 @@ class Cat
                     $this->mood_change += 15;
                     $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
                 }
-                $this->communication_change += 10;
             } else {
                 $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
