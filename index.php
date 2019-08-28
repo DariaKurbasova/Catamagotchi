@@ -32,14 +32,14 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
     <div class = "game_page">
         <div class = "container">
 
-            <?php if ($game->checkGameEnd()) { ?>
+            <?php if ($game->isFinished()) { ?>
             <div class = "main-header">
                 <img class="game_icon" src="img/Cat-icon.png">
                 <h1 class = "game_title">КОТамагочи</h1>
                 <div class="clearfix"></div>
             </div>
 
-                <p class = "gameover_message"> <?= $game->checkGameEnd() ?> </p>
+                <p class = "gameover_message"> <?= $game->gameover_message ?> </p>
                 <img class = "gameover_image" src="<?= $game->gameover_image ?>">
             <?php } else { ?>
 
@@ -186,7 +186,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <footer>
                 <hr style="border: 1px solid #00006b; margin-bottom: 0">
                 <p class = "author_name">Автор проекта - Курбасова Дарья</p>
-                <p class = "rights">Все права защищены</p>
+                <p class = "rights" title="От кого?">Все права защищены</p>
             </footer>
         </div>
     </div>

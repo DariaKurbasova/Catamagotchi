@@ -15,9 +15,9 @@ class Game
     public $action_history = [];
 
     public $orange_cat_images = [
-        'dry' => 'img/orange_dry.jpg',
-        'wet' => 'img/orange_wet.jpg',
-        'home' => 'img/orange_home.jpg',
+        'eat_dry' => 'img/orange_eat_dry.jpg',
+        'eat_wet' => 'img/orange_eat_wet.jpg',
+        'eat_home' => 'img/orange_eat_home.jpg',
         'stroke' => 'img/orange_stroke.jpg',
         'play_teaser' => 'img/orange_teaser.png',
         'play_mouse' => 'img/orange_mouse.jpg',
@@ -32,7 +32,9 @@ class Game
         'boredom' => 'img/orange_boredom.jpg',
         'happiness' => 'img/orange_happiness.jpg'
     ];
+
     public $gameover_image;
+    public $gameover_message;
 
     /**
      * Game constructor.
@@ -60,25 +62,28 @@ class Game
         return $this->message;
     }
 
+    // Проверяет условия завершения игры, заполняет финишные сообщение и картинку
     public function checkGameEnd () {
-        if ($this->cat->food <= 10) {
+        if ($this->cat->food <= 0) {
             $this->gameover_image = $this->gameover_images['hunger'];
-            return "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> К сожалению, ваш питомец умер от голода.";
-        } elseif ($this->cat->communication <= 10) {
+            $this->gameover_message = "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> К сожалению, ваш питомец умер от голода.";
+        } elseif ($this->cat->communication <= 0) {
             $this->gameover_image = $this->gameover_images['loneliness'];
-            return "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> Ваш питомец впал в глубокую депрессию от одиночества.";
-        } elseif ($this->cat->energy <= 10) {
+            $this->gameover_message = "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> Ваш питомец впал в глубокую депрессию от одиночества.";
+        } elseif ($this->cat->energy <= 0) {
             $this->gameover_image = $this->gameover_images['fatigue'];
-            return "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> Совсем замучили бедное животное.";
-        } elseif ($this->cat->mood <= 10) {
+            $this->gameover_message = "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> Совсем замучили бедное животное.";
+        } elseif ($this->cat->mood <= 0) {
             $this->gameover_image = $this->gameover_images['boredom'];
-            return "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> Питомцу стало скучно с вами, и он убежал искать других хозяев.";
+            $this->gameover_message = "Вы плохой хозяин, вам нельзя доверить заботу о котике! <br> Питомцу стало скучно с вами, и он убежал искать других хозяев.";
         } elseif ($this->cat->food >= 80 && $this->cat->communication >= 80 && $this->cat->energy >= 80 && $this->cat->mood >= 80) {
             $this->gameover_image = $this->gameover_images['happiness'];
-            return "Вы отлично справились с заботой о питомце, котик вас очень любит!";
-        } else {
-            return false;
+            $this->gameover_message = "Вы отлично справились с заботой о питомце, котик вас очень любит!";
         }
+    }
+
+    public function isFinished() {
+        return !empty($this->gameover_message);
     }
 
 }

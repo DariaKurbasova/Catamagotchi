@@ -12,6 +12,7 @@ class Cat
     public $food_change = 0;
     public $communication_change = 0;
     public $energy_change = 0;
+    public $actionDice;
 
     public $reloads = [];
     public $max_reloads = [
@@ -62,52 +63,42 @@ class Cat
         if (!$this->checkSameActions("food")) {
             $this->food_change += 10;
             $this->communication_change -= 5;
-            $probability_like = rand(1, 10);
 
-            switch ($food_type) {
-                case "dry":
-                    $this->energy_change += 5;
-                    if ($this->getReloadLeft('eat_dry') != 0) {
-                        if ($probability_like == 10) {
-                            $this->mood_change -= 10;
-                            $this->game->message = self::EAT_MESSAGE_HATE;
-                        } else {
-                            $this->mood_change += 5;
-                            $this->game->message = self::EAT_MESSAGE_LIKE;
-                        }
-                    } else {
-                        $this->mood_change += 5;
-                        $this->game->message = self::EAT_MESSAGE_LIKE;
-                    }
-
-                    break;
-                case "wet":
+            if ($food_type == 'home') {
+                // Для домашнего корма - особая логика. Считаем кол-во кормлений им за игру
+                if (array_count_values($this->game->action_history)["home"] < 3) {
+                    $this->mood_change += 15;
                     $this->energy_change += 10;
-                    if ($this->getReloadLeft('eat_wet') != 0) {
-                        if ($probability_like > 5) {
-                            $this->mood_change -= 10;
-                            $this->game->message = self::EAT_MESSAGE_HATE;
-                        } else {
-                            $this->mood_change += 15;
-                            $this->game->message = self::EAT_MESSAGE_LIKE;
-                        }
-                    } else {
-                        $this->mood_change += 10;
-                        $this->game->message = self::EAT_MESSAGE_LIKE;
-                    }
-                    break;
-                case "home":
-                    if (array_count_values($this->game->action_history)["home"] < 3) {
-                        $this->mood_change += 15;
-                        $this->energy_change += 10;
-                        $this->game->message = self::EAT_MESSAGE_LIKE;
-                    } else {
-                        $this->food_change -= 10;
-                        $this->game->message = self::STOP_MESSAGE;
-                    }
+                    $this->game->message = self::EAT_MESSAGE_LIKE;
+                } else {
+                    $this->food_change -= 10;
+                    $this->game->message = self::STOP_MESSAGE;
+                }
+            } else {
+                if ($food_type == "dry") {
+                    // Кормление сухим кормом
+                    $this->energy_change += 5;
+                    $moodBonus = 5;
+                    $moodPenalty = -10;
+                    $probabilityLike = !$this->isReloading('eat_dry') ? 9 : 7;
+                } else {
+                    // Кормление влажным кормом
+                    $this->energy_change += 10;
+                    $moodBonus = 15;
+                    $moodPenalty = -10;
+                    $probabilityLike = !$this->isReloading('eat_wet') ? 8 : 4;
+                }
+
+                // Сверяем шанс успеха и бросок кубика. Успех 7 из 10 - значит, что бросок [1, 7] - успех, [8, 10] - провал
+                if ($this->actionDice <= $probabilityLike) {
+                    $this->mood_change += $moodBonus;
+                    $this->game->message = self::EAT_MESSAGE_LIKE;
+                } else {
+                    $this->mood_change += $moodPenalty;
+                    $this->game->message = self::EAT_MESSAGE_HATE;
+                }
             }
         }
-        $this->game->action_history[] = $food_type;
     }
 
     // Погладить
@@ -115,8 +106,7 @@ class Cat
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 5;
             if ($this->getReloadLeft('stroke') != 0) {
-                $probability_like = rand(1, 10);
-                if ($probability_like > 5) {
+                if ($this->actionDice > 5) {
                     $this->mood_change -= 10;
                     $this->energy_change -= 15;
                     $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
@@ -132,16 +122,15 @@ class Cat
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
         }
-        $this->game->action_history[] = "stroke";
     }
+
     // Поиграть с дразнилкой
     public function playTeaser () {
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 15;
             if ($this->getReloadLeft('play_teaser') != 0) {
                 $this->energy_change -= 20;
-                $probability_like = rand(1, 10);
-                if ($probability_like > 8) {
+                if ($this->actionDice > 8) {
                     $this->mood_change -= 10;
                     $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
                 } else {
@@ -154,16 +143,15 @@ class Cat
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
         }
-        $this->game->action_history[] = "play_teaser";
     }
+
     // Поиграть с мышкой
     public function playMouse () {
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 10;
             if ($this->getReloadLeft('play_mouse')) {
                 $this->energy_change -= 15;
-                $probability_like = rand(1, 10);
-                if ($probability_like > 6) {
+                if ($this->actionDice > 6) {
                     $this->mood_change -= 10;
                     $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
                 } else {
@@ -176,12 +164,11 @@ class Cat
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
         }
-        $this->game->action_history[] = "play_mouse";
     }
+
     // Вывести котика на прогулку
     public function walking () {
         $this->food_change -= 15;
-        $this->game->action_history[] = "walking";
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 25;
             $this->mood_change += 20;
@@ -190,9 +177,9 @@ class Cat
             // todo Добавить особые условия этому методу
         }
     }
+
     // Сброс показателей ночью (каждое 4-е действие - сон)
     public function sleep () {
-        $this->game->action_history[] = "sleep";
         $this->food_change = -15;
         if ($this->food > 60) {
             $this->food_change -= round(($this->food - 60) / 5);
@@ -232,30 +219,35 @@ class Cat
 // Делаем действие "покормить сухим кормом". Записываем его в массив с 1, к остальным имеющимся прибавляем +1.
 // Проверяем каждый элемент на максимальную перезарядку. Если он становится равен ей - исключаем его из массива.
 
-    public function countReload($action) {
-        if (empty($this->reloads[$action])) {
-            $this->reloads[$action] = 0;
+    public function countReload($currentAction) {
+        // Перезарядка начнётся, если её нет сейчас (и она предусмотрена для этого действия)
+        $needTriggerReload = !isset($this->reloads[$currentAction]) && isset($this->max_reloads[$currentAction]);
+
+        // Уменьшаем перезарядку каждого действия на 1. Убираем заряженные
+        foreach ($this->reloads as $action => &$turnsLeft) {
+            $turnsLeft--;
+            if ($turnsLeft <= 0) {
+                unset($this->reloads[$action]);
+            }
         }
-        foreach ($this->reloads as $reload => $left) {
-            if ($left < $this->max_reloads[$reload]) {
-                $this->reloads[$reload]++;
-            }
-            if ($left == $this->max_reloads[$reload]) {
-                unset($this->reloads[$reload]);
-            }
+
+        // Добавляем новое действие с максимальным количеством ходов
+        if ($needTriggerReload) {
+            $this->reloads[$currentAction] = $this->max_reloads[$currentAction];
         }
     }
 
     public function runAction($action_type) {
-        $this->countReload($action_type);
-
         $this->mood_change = 0;
         $this->food_change = 0;
         $this->communication_change = 0;
         $this->energy_change = 0;
 
+        $this->game->action_history[] = $action_type;
+
         // Выбираем и запускаем действие
         // В действиях не меняем муд/фуд, а присваиваем _change
+        $this->actionDice = rand(1, 10);
         switch ($action_type) {
             case 'eat_dry':
                 $this->feed('dry');
@@ -288,16 +280,20 @@ class Cat
         $this->communication += $this->communication_change;
         $this->energy += $this->energy_change;
 
+        $this->countReload($action_type);
         $this->fixLimits();
+
+        $this->game->checkGameEnd();
     }
 
-    // Сколько ходов заряжается умение (возможно, нам нужнее
+    // Сколько ходов заряжается умение
     public function getReloadLeft($type)
     {
-        if (isset($this->reloads[$type])) {
-            return $this->max_reloads[$type] - $this->reloads[$type]; 
-        } else {
-            return 0;
-        }
+        return isset($this->reloads[$type]) ? $this->reloads[$type] : 0;
+    }
+
+    public function isReloading($type)
+    {
+        return $this->getReloadLeft($type) > 0;
     }
 }
