@@ -106,7 +106,7 @@ class Cat
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 5;
             $this->communication_change += 10;
-            if ($this->getReloadLeft('stroke') != 0) {
+            /*if ($this->getReloadLeft('stroke') != 0) {
                 if ($this->actionDice > 5) {
                     $this->mood_change -= 10;
                     $this->energy_change -= 15;
@@ -120,6 +120,21 @@ class Cat
                 $this->mood_change += 15;
                 $this->energy_change += 10;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            }*/
+
+            $isReloading = $this->isReloading('stroke');
+            $probabilityLike = !$isReloading ? 8 : 5;
+            $moodBonus       = !$isReloading ? 20 : 15;
+            $moodPenalty     = -10;
+            $energyBonus     = !$isReloading ? 10 : 5;
+
+            if ($this->actionDice <= $probabilityLike) {
+                $this->mood_change += $moodBonus;
+                $this->energy_change += $energyBonus;
+                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            } else {
+                $this->mood_change += $moodPenalty;
+                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
         }
     }
@@ -129,7 +144,7 @@ class Cat
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 15;
             $this->communication_change += 10;
-            if ($this->getReloadLeft('play_teaser') != 0) {
+            /*if ($this->getReloadLeft('play_teaser') != 0) {
                 $this->energy_change -= 20;
                 if ($this->actionDice > 8) {
                     $this->mood_change -= 10;
@@ -141,6 +156,19 @@ class Cat
             } else {
                 $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            }*/
+
+            $isReloading = $this->isReloading('play_teaser');
+            $probabilityLike = !$isReloading ? 9 : 7;
+            $moodBonus       = !$isReloading ? 15 : 10;
+            $moodPenalty     = -10;
+
+            if ($this->actionDice <= $probabilityLike) {
+                $this->mood_change += $moodBonus;
+                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            } else {
+                $this->mood_change += $moodPenalty;
+                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
         }
     }
@@ -150,8 +178,8 @@ class Cat
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 10;
             $this->communication_change += 10;
-            if ($this->getReloadLeft('play_mouse')) {
-                $this->energy_change -= 15;
+            $this->energy_change -= 15;
+            /*if ($this->getReloadLeft('play_mouse')) {
                 if ($this->actionDice > 6) {
                     $this->mood_change -= 10;
                     $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
@@ -162,19 +190,59 @@ class Cat
             } else {
                 $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            }*/
+
+            $isReloading = $this->isReloading('play_teaser');
+            $probabilityLike = !$isReloading ? 8 : 5;
+            $moodBonus       = !$isReloading ? 15 : 10;
+            $moodPenalty     = -10;
+
+            if ($this->actionDice <= $probabilityLike) {
+                $this->mood_change += $moodBonus;
+                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+            } else {
+                $this->mood_change += $moodPenalty;
+                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
         }
     }
 
     // Вывести котика на прогулку
     public function walking () {
-        $this->food_change -= 15;
+        /*$this->food_change -= 15;
         if (!$this->checkSameActions("communication")) {
             $this->energy_change -= 25;
             $this->mood_change += 20;
             $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             $this->communication_change += 10;
             // todo Добавить особые условия этому методу
+        }*/
+
+        // Тут несколько случайных вариантов
+        $walkingOptions = $this->getWalkingOptions();
+        shuffle($walkingOptions);
+        $option = $walkingOptions[0];
+
+        $this->energy_change        = $option['energyChange'];
+        $this->mood_change          = $option['moodChange'];
+        $this->communication_change = $option['communicationChange'];
+        $this->food_change          = $option['foodChange'];
+        $this->game->message        = $option['message'];
+
+        // Перезарядка здесь лишь уменьшает бонус к атрибутам, если он есть
+        if ($this->isReloading('walking')) {
+            if ($this->energy_change >= 5) {
+                $this->energy_change -= 5;
+            }
+            if ($this->communication_change >= 5) {
+                $this->communication_change -= 5;
+            }
+            if ($this->food_change >= 5) {
+                $this->food_change -= 5;
+            }
+            if ($this->mood_change >= 5) {
+                $this->mood_change -= 5;
+            }
         }
     }
 
@@ -295,5 +363,85 @@ class Cat
     public function isReloading($type)
     {
         return $this->getReloadLeft($type) > 0;
+    }
+
+    /**
+     * Варианты, которые могут случиться при прогулке (пока все равновероятны)
+     * @return array
+     */
+    public function getWalkingOptions()
+    {
+       return [
+           [
+               'message' => 'Котик прекрасно и спокойно погулял',
+               'moodChange' => 20,
+               'energyChange' => -15,
+               'foodChange' => -10,
+               'communicationChange' => 10
+           ],
+           [
+               'message' => 'На прогулке котик встретил сородича и они мило поболтали',
+               'moodChange' => 25,
+               'energyChange' => -15,
+               'foodChange' => -10,
+               'communicationChange' => 20
+           ],
+           [
+               'message' => 'Гуляя, котик залез на дерево и долго не слезал',
+               'moodChange' => 10,
+               'energyChange' => -15,
+               'foodChange' => -20,
+               'communicationChange' => 5
+           ],
+           [
+               'message' => 'На прогулке за котиком погналась собака. Он напуган и измотан',
+               'moodChange' => -10,
+               'energyChange' => -30,
+               'foodChange' => -15,
+               'communicationChange' => 20
+           ],
+           [
+               'message' => 'На прогулке котик поймал и съел жирного голубя',
+               'moodChange' => 25,
+               'energyChange' => -25,
+               'foodChange' => 15,
+               'communicationChange' => 10
+           ],
+           [
+               'message' => 'Котик немнжго погулял и попросился домой',
+               'moodChange' => 10,
+               'energyChange' => -10,
+               'foodChange' => -5,
+               'communicationChange' => 5
+           ],
+           [
+               'message' => 'Вы вышли погулять, но дождь нарушил ваши планы',
+               'moodChange' => -5,
+               'energyChange' => -10,
+               'foodChange' => -5,
+               'communicationChange' => 0
+           ],
+           [
+               'message' => 'Котик начал есть какую-то гадость с земли. Ну не дурак ли?',
+               'moodChange' => 5,
+               'energyChange' => -15,
+               'foodChange' => 5,
+               'communicationChange' => 10
+           ],
+           [
+               'message' => 'Сегодня котик особенно игривый и резвый',
+               'moodChange' => 30,
+               'energyChange' => -20,
+               'foodChange' => -15,
+               'communicationChange' => 15
+           ],
+           [
+               'message' => 'Котик классно повалялся в грязи, но теперь ему придется терпеть мытье',
+               'moodChange' => 5,
+               'energyChange' => -20,
+               'foodChange' => -10,
+               'communicationChange' => 20
+           ],
+       ];
     }
 }
