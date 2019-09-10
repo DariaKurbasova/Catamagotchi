@@ -154,29 +154,35 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     <b>Сытость: <?= $cat->food ?></b>
                     <div class = "indicator food_indicator glow">
                         <span style = "width: <?= $cat->food - $cat->food_change ?>%;" data-width="<?= $cat->food ?>"></span>
+                        <p class = "indicator_change" data-number="<?= $cat->food_change ?>"></p>
                     </div>
                 </div>
                 <div class = "communication_satisfaction">
                     <b>Общение: <?= $cat->communication ?></b>
                     <div class = "indicator communication_indicator glow">
                         <span style = "width: <?= $cat->communication - $cat->communication_change ?>%;" data-width="<?= $cat->communication ?>"></span>
+                        <p class = "indicator_change" data-number="<?= $cat->communication_change ?>"></p>
                     </div>
                 </div>
                 <div class = "energy_satisfaction">
                     <b>Энергия: <?= $cat->energy ?></b>
                     <div class = "indicator energy_indicator glow">
                         <span style = "width: <?= $cat->energy - $cat->energy_change ?>%;" data-width="<?= $cat->energy ?>"></span>
+                        <p class = "indicator_change" data-number="<?= $cat->energy_change ?>"></p>
                     </div>
                 </div>
                 <div class = "mood">
                     <b>Настроение: <?= $cat->mood ?></b>
                     <div class = "indicator mood_indicator glow">
                         <span style = "width: <?= $cat->mood - $cat->mood_change ?>%;" data-width="<?= $cat->mood ?>"></span>
+                        <p class = "indicator_change" data-number="<?= $cat->mood_change ?>"></p>
                     </div>
                 </div>
             </div>
             <img class = "main_image" src="<?= $game->getImage() ?>">
-            <p class="message"><b><?= $game->getMessage() ?></b></p>
+            <div class="message">
+                <p><b><?= $game->getMessage() ?></b></p>
+            </div>
             <div class="clearfix"></div>
             <?php } ?>
             <div class = "restart_game" >
