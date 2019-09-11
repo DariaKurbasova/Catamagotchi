@@ -61,40 +61,53 @@ class Cat
     // Покормить котика одним из 3 видов корма: сухой, влажный и домашний. Котан привередливый, не все корма любит одинково.
     public function feed ($food_type) {
         if (!$this->checkSameActions("food")) {
-            $this->food_change += 10;
             $this->communication_change -= 5;
 
             if ($food_type == 'home') {
                 // Для домашнего корма - особая логика. Считаем кол-во кормлений им за игру
                 if (array_count_values($this->game->action_history)["home"] < 3) {
-                    $this->mood_change += 15;
-                    $this->energy_change += 10;
+                    $this->food_change = 15;
+                    $this->energy_change = 10;
+                    $this->mood_change = 7;
                     $this->game->message = self::EAT_MESSAGE_LIKE;
                 } else {
-                    $this->food_change -= 10;
                     $this->game->message = self::STOP_MESSAGE;
                 }
             } else {
                 if ($food_type == "dry") {
                     // Кормление сухим кормом
-                    $this->energy_change += 5;
-                    $moodBonus = 5;
-                    $moodPenalty = -10;
+                    $changeSuccess = [
+                        'food' => !$this->isReloading('eat_dry') ? 15 : 10,
+                        'mood' => 2,
+                        'energy' => 5,
+                    ];
+                    $changeFail = [
+                        'food' => 10,
+                        'mood' => -2,
+                        'energy' => 0,
+                    ];
                     $probabilityLike = !$this->isReloading('eat_dry') ? 9 : 7;
                 } else {
                     // Кормление влажным кормом
-                    $this->energy_change += 10;
-                    $moodBonus = 15;
-                    $moodPenalty = -10;
+                    $changeSuccess = [
+                        'food' => !$this->isReloading('eat_wet') ? 15 : 10,
+                        'mood' => 5,
+                        'energy' => 10,
+                    ];
+                    $changeFail = [
+                        'food' => 10,
+                        'mood' => -3,
+                        'energy' => 5,
+                    ];
                     $probabilityLike = !$this->isReloading('eat_wet') ? 8 : 4;
                 }
 
                 // Сверяем шанс успеха и бросок кубика. Успех 7 из 10 - значит, что бросок [1, 7] - успех, [8, 10] - провал
                 if ($this->actionDice <= $probabilityLike) {
-                    $this->mood_change += $moodBonus;
+                    $this->applyChange($changeSuccess);
                     $this->game->message = self::EAT_MESSAGE_LIKE;
                 } else {
-                    $this->mood_change += $moodPenalty;
+                    $this->applyChange($changeFail);
                     $this->game->message = self::EAT_MESSAGE_HATE;
                 }
             }
@@ -105,20 +118,26 @@ class Cat
     public function stroke () {
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 5;
-            $this->communication_change += 10;
 
             $isReloading = $this->isReloading('stroke');
-            $probabilityLike = !$isReloading ? 8 : 5;
-            $moodBonus       = !$isReloading ? 20 : 15;
-            $moodPenalty     = -10;
-            $energyBonus     = !$isReloading ? 10 : 5;
+            $probabilityLike = !$isReloading ? 7 : 5;
+            $changeSuccess = [
+                'communication' => 10,
+                'energy' => 5,
+                'mood' => 3,
+            ];
+
+            $changeFail = [
+                'communication' => 5,
+                'energy' => 0,
+                'mood' => -3,
+            ];
 
             if ($this->actionDice <= $probabilityLike) {
-                $this->mood_change += $moodBonus;
-                $this->energy_change += $energyBonus;
+                $this->applyChange($changeSuccess);
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             } else {
-                $this->mood_change += $moodPenalty;
+                $this->applyChange($changeFail);
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
         }
@@ -127,19 +146,27 @@ class Cat
     // Поиграть с дразнилкой
     public function playTeaser () {
         if (!$this->checkSameActions("communication")) {
-            $this->food_change -= 15;
-            $this->communication_change += 10;
+            $this->food_change -= 10;
 
             $isReloading = $this->isReloading('play_teaser');
-            $probabilityLike = !$isReloading ? 9 : 7;
-            $moodBonus       = !$isReloading ? 15 : 10;
-            $moodPenalty     = -10;
+            $probabilityLike = !$isReloading ? 9 : 6;
+            $changeSuccess = [
+                'communication' => 15,
+                'energy' => -15,
+                'mood' => 5,
+            ];
+
+            $changeFail = [
+                'communication' => 10,
+                'energy' => -10,
+                'mood' => -5,
+            ];
 
             if ($this->actionDice <= $probabilityLike) {
-                $this->mood_change += $moodBonus;
+                $this->applyChange($changeSuccess);
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             } else {
-                $this->mood_change += $moodPenalty;
+                $this->applyChange($changeFail);
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
         }
@@ -148,20 +175,27 @@ class Cat
     // Поиграть с мышкой
     public function playMouse () {
         if (!$this->checkSameActions("communication")) {
-            $this->food_change -= 10;
-            $this->communication_change += 10;
-            $this->energy_change -= 15;
+            $this->food_change -= 5;
 
             $isReloading = $this->isReloading('play_mouse');
             $probabilityLike = !$isReloading ? 8 : 5;
-            $moodBonus       = !$isReloading ? 15 : 10;
-            $moodPenalty     = -10;
+            $changeSuccess = [
+                'communication' => 10,
+                'energy' => -10,
+                'mood' => 4,
+            ];
+
+            $changeFail = [
+                'communication' => 5,
+                'energy' => -5,
+                'mood' => -3,
+            ];
 
             if ($this->actionDice <= $probabilityLike) {
-                $this->mood_change += $moodBonus;
+                $this->applyChange($changeSuccess);
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             } else {
-                $this->mood_change += $moodPenalty;
+                $this->applyChange($changeFail);
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
         }
@@ -200,25 +234,63 @@ class Cat
 
     // Сброс показателей ночью (каждое 4-е действие - сон)
     public function sleep () {
-        $this->food_change = -15;
-        if ($this->food > 60) {
-            $this->food_change -= round(($this->food - 60) / 5);
+        // За излишки еды, общения, энергии, котик получит бонусы, за дефицит - наоборот
+        $bonusResources = 0;
+
+        $this->food_change = -10;
+        // Если еды больше 50 - она тратится быстрее, котик доволен
+        if ($this->food > 50) {
+            $additionalFoodSpent = floor(($this->food - 50) / 5);
+            if ($this->food > 80) {
+                // Если за 80 - ещё быстрее тратится
+                $additionalFoodSpent += floor(($this->food - 80) / 5);
+            }
+            $bonusResources += $additionalFoodSpent;
+            $this->food_change -= $additionalFoodSpent;
+        } elseif ($this->food < 30) {
+            // Если еды меньше 30 - котик начинает голодать, тратит меньше, но очень недоволен этим
+            $foodDeficit = ceil((30 - $this->food) / 5);
+            $this->food_change += $foodDeficit;
+            $bonusResources -= $foodDeficit * 2;
         }
-        if ($this->food > 90) {
-            $this->food_change -= round(($this->food - 90) / 5);
+
+        // Теперь такая же логика с общением
+        $this->communication_change = -15;
+        if ($this->communication > 50) {
+            $additionalCommSpent = floor(($this->communication - 50) / 5);
+            if ($this->communication > 80) {
+                $additionalCommSpent += floor(($this->communication - 80) / 5);
+            }
+            $this->communication_change -= $additionalCommSpent;
+            $bonusResources += $additionalCommSpent;
+        } elseif ($this->communication < 30) {
+            $commDeficit = ceil((30 - $this->communication) / 5);
+            $this->communication_change += $commDeficit;
+            $bonusResources -= $commDeficit * 2;
         }
-        $this->communication_change = -20;
-        if ($this->communication > 60) {
-            $this->communication_change -= round(($this->communication - 60) / 5);
+
+        if ($this->energy <= 30) {
+            // Котик устал, восполняет больше, но не рад этому
+            $this->energy_change = 20;
+            $bonusResources -= 4;
+        } elseif ($this->energy < 60) {
+            // Котик нейтрально поспал
+            $this->energy_change = 15;
+        } else {
+            // Котик бодр
+            $bonusResources += 3;
+            $this->energy_change = 10;
         }
-        if ($this->communication > 90) {
-            $this->communication_change -= round(($this->communication - 90) / 5);
-        }
-        $this->energy_change = 10;
-        if ($this->energy <= 60) {
-            $this->energy_change += 10;
-        }
-        $this->mood_change -= 10;
+
+        $this->mood_change = -5;
+        // Настроение медленно стремится к среднему. За каждые 12 единиц от 50 смещается на 1
+        $moodRegression = ($this->mood - 50) / 12;
+        // За каждые 3 лишних потраченных ресурса +1 к настроению
+        $moodFromResources = $bonusResources / 3;
+        $moodBonus = $moodFromResources - $moodRegression;
+
+        // Берём общий бонус в сторону нуля (2,7 -> 2; -3,6 -> -3)
+        $this->mood_change += ($moodBonus > 0 ? floor($moodBonus) : ceil($moodBonus));
         $this->game->message = self::SLEEP_MESSAGE;
     }
 
@@ -326,74 +398,90 @@ class Cat
        return [
            [
                'message' => 'Котик прекрасно и спокойно погулял',
-               'moodChange' => 20,
+               'moodChange' => 10,
                'energyChange' => -15,
                'foodChange' => -10,
                'communicationChange' => 10
            ],
            [
                'message' => 'На прогулке котик встретил сородича и они мило поболтали',
-               'moodChange' => 25,
+               'moodChange' => 15,
                'energyChange' => -15,
                'foodChange' => -10,
                'communicationChange' => 20
            ],
            [
                'message' => 'Гуляя, котик залез на дерево и долго не слезал',
-               'moodChange' => 10,
+               'moodChange' => 5,
                'energyChange' => -15,
                'foodChange' => -20,
                'communicationChange' => 5
            ],
            [
                'message' => 'На прогулке за котиком погналась собака. Он напуган и измотан',
-               'moodChange' => -10,
+               'moodChange' => -7,
                'energyChange' => -30,
                'foodChange' => -15,
                'communicationChange' => 20
            ],
            [
                'message' => 'На прогулке котик поймал и съел жирного голубя',
-               'moodChange' => 25,
+               'moodChange' => 12,
                'energyChange' => -25,
                'foodChange' => 15,
                'communicationChange' => 10
            ],
            [
-               'message' => 'Котик немнжго погулял и попросился домой',
-               'moodChange' => 10,
+               'message' => 'Котик немножко погулял и попросился домой',
+               'moodChange' => 5,
                'energyChange' => -10,
                'foodChange' => -5,
                'communicationChange' => 5
            ],
            [
                'message' => 'Вы вышли погулять, но дождь нарушил ваши планы',
-               'moodChange' => -5,
+               'moodChange' => -3,
                'energyChange' => -10,
                'foodChange' => -5,
                'communicationChange' => 0
            ],
            [
                'message' => 'Котик начал есть какую-то гадость с земли. Ну не дурак ли?',
-               'moodChange' => 5,
+               'moodChange' => 3,
                'energyChange' => -15,
                'foodChange' => 5,
                'communicationChange' => 10
            ],
            [
                'message' => 'Сегодня котик особенно игривый и резвый',
-               'moodChange' => 30,
+               'moodChange' => 15,
                'energyChange' => -20,
                'foodChange' => -15,
                'communicationChange' => 15
            ],
            [
                'message' => 'Котик классно повалялся в грязи, но теперь ему придется терпеть мытье',
-               'moodChange' => 5,
+               'moodChange' => 3,
                'energyChange' => -20,
                'foodChange' => -10,
                'communicationChange' => 20
            ],
        ];
+    }
+
+    private function applyChange(array $attributesChange)
+    {
+        if (isset($attributesChange['food'])) {
+            $this->food_change += $attributesChange['food'];
+        }
+        if (isset($attributesChange['communication'])) {
+            $this->communication_change += $attributesChange['communication'];
+        }
+        if (isset($attributesChange['energy'])) {
+            $this->energy_change += $attributesChange['energy'];
+        }
+        if (isset($attributesChange['mood'])) {
+            $this->mood_change += $attributesChange['mood'];
+        }
     }
 }

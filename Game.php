@@ -79,6 +79,9 @@ class Game
         } elseif ($this->cat->food >= 80 && $this->cat->communication >= 80 && $this->cat->energy >= 80 && $this->cat->mood >= 80) {
             $this->gameover_image = $this->gameover_images['happiness'];
             $this->gameover_message = "Вы отлично справились с заботой о питомце, котик вас очень любит!";
+        } elseif ($this->cat->mood >= 95) {
+            $this->gameover_image = $this->gameover_images['happiness'];
+            $this->gameover_message = "Вы отлично справились с заботой о питомце, котик вас очень любит!";
         }
     }
 
