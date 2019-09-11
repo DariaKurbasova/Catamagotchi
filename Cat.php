@@ -106,21 +106,6 @@ class Cat
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 5;
             $this->communication_change += 10;
-            /*if ($this->getReloadLeft('stroke') != 0) {
-                if ($this->actionDice > 5) {
-                    $this->mood_change -= 10;
-                    $this->energy_change -= 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
-                } else {
-                    $this->mood_change += 20;
-                    $this->energy_change += 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-                }
-            } else {
-                $this->mood_change += 15;
-                $this->energy_change += 10;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            }*/
 
             $isReloading = $this->isReloading('stroke');
             $probabilityLike = !$isReloading ? 8 : 5;
@@ -144,19 +129,6 @@ class Cat
         if (!$this->checkSameActions("communication")) {
             $this->food_change -= 15;
             $this->communication_change += 10;
-            /*if ($this->getReloadLeft('play_teaser') != 0) {
-                $this->energy_change -= 20;
-                if ($this->actionDice > 8) {
-                    $this->mood_change -= 10;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
-                } else {
-                    $this->mood_change += 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-                }
-            } else {
-                $this->mood_change += 15;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            }*/
 
             $isReloading = $this->isReloading('play_teaser');
             $probabilityLike = !$isReloading ? 9 : 7;
@@ -179,20 +151,8 @@ class Cat
             $this->food_change -= 10;
             $this->communication_change += 10;
             $this->energy_change -= 15;
-            /*if ($this->getReloadLeft('play_mouse')) {
-                if ($this->actionDice > 6) {
-                    $this->mood_change -= 10;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
-                } else {
-                    $this->mood_change += 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-                }
-            } else {
-                $this->mood_change += 15;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            }*/
 
-            $isReloading = $this->isReloading('play_teaser');
+            $isReloading = $this->isReloading('play_mouse');
             $probabilityLike = !$isReloading ? 8 : 5;
             $moodBonus       = !$isReloading ? 15 : 10;
             $moodPenalty     = -10;
@@ -209,14 +169,6 @@ class Cat
 
     // Вывести котика на прогулку
     public function walking () {
-        /*$this->food_change -= 15;
-        if (!$this->checkSameActions("communication")) {
-            $this->energy_change -= 25;
-            $this->mood_change += 20;
-            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            $this->communication_change += 10;
-            // todo Добавить особые условия этому методу
-        }*/
 
         // Тут несколько случайных вариантов
         $walkingOptions = $this->getWalkingOptions();
