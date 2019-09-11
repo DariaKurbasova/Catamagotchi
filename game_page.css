@@ -231,6 +231,9 @@ svg {
     position: absolute;
     z-index: 99;
 }
+.stroke .tooltip:hover:before {
+    bottom: 66%;
+}
 .feed_dry .tooltip:hover:after {
     content: 'Дает небольшой бонус, но почти всегда нравится котику.';
 }
