@@ -109,9 +109,6 @@ class Cat
                 $this->game->message = self::EAT_MESSAGE_HATE;
             }
         }
-
-        $this->communication_change -= 5;
-
     }
 
     // Погладить
