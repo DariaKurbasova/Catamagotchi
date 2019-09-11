@@ -45,10 +45,9 @@ class Cat
     }
 
     // Одни и те же действия быстро наскучат котику. Нужно не больше 3 одинаковых подряд.
-    public function checkSameActions ($action) {
+    public function checkSameActions () {
         $history = $this->game->action_history;
         if (count($history) >= 3 && $history[count($history)-1] == $history[count($history)-2] && $history[count($history)-1] == $history[count($history)-3]) {
-            $this->$action += 10;
             $this->mood_change -= 20;
             $this->energy_change -= 10;
             $this->game->message = self::TIRED_OF_IT_MESSAGE;
@@ -60,150 +59,142 @@ class Cat
 
     // Покормить котика одним из 3 видов корма: сухой, влажный и домашний. Котан привередливый, не все корма любит одинково.
     public function feed ($food_type) {
-        if (!$this->checkSameActions("food")) {
-            $this->food_change += 10;
-            $this->communication_change -= 5;
-
-            if ($food_type == 'home') {
-                // Для домашнего корма - особая логика. Считаем кол-во кормлений им за игру
-                if (array_count_values($this->game->action_history)["home"] < 3) {
-                    $this->mood_change += 15;
-                    $this->energy_change += 10;
-                    $this->game->message = self::EAT_MESSAGE_LIKE;
-                } else {
-                    $this->food_change -= 10;
-                    $this->game->message = self::STOP_MESSAGE;
-                }
+        $this->food_change += 10;
+        if ($food_type == 'home') {
+            // Для домашнего корма - особая логика. Считаем кол-во кормлений им за игру
+            if (array_count_values($this->game->action_history)["home"] < 3) {
+                $this->mood_change += 15;
+                $this->energy_change += 10;
+                $this->game->message = self::EAT_MESSAGE_LIKE;
             } else {
-                if ($food_type == "dry") {
-                    // Кормление сухим кормом
-                    $this->energy_change += 5;
-                    $moodBonus = 5;
-                    $moodPenalty = -10;
-                    $probabilityLike = !$this->isReloading('eat_dry') ? 9 : 7;
-                } else {
-                    // Кормление влажным кормом
-                    $this->energy_change += 10;
-                    $moodBonus = 15;
-                    $moodPenalty = -10;
-                    $probabilityLike = !$this->isReloading('eat_wet') ? 8 : 4;
-                }
+                $this->food_change -= 10;
+                $this->game->message = self::STOP_MESSAGE;
+            }
+        } else {
+            if ($food_type == "dry") {
+                // Кормление сухим кормом
+                $this->energy_change += 5;
+                $moodBonus = 5;
+                $moodPenalty = -10;
+                $probabilityLike = !$this->isReloading('eat_dry') ? 9 : 7;
+            } else {
+                // Кормление влажным кормом
+                $this->energy_change += 10;
+                $moodBonus = 15;
+                $moodPenalty = -10;
+                $probabilityLike = !$this->isReloading('eat_wet') ? 8 : 4;
+            }
 
-                // Сверяем шанс успеха и бросок кубика. Успех 7 из 10 - значит, что бросок [1, 7] - успех, [8, 10] - провал
-                if ($this->actionDice <= $probabilityLike) {
-                    $this->mood_change += $moodBonus;
-                    $this->game->message = self::EAT_MESSAGE_LIKE;
-                } else {
-                    $this->mood_change += $moodPenalty;
-                    $this->game->message = self::EAT_MESSAGE_HATE;
-                }
+            // Сверяем шанс успеха и бросок кубика. Успех 7 из 10 - значит, что бросок [1, 7] - успех, [8, 10] - провал
+            if ($this->actionDice <= $probabilityLike) {
+                $this->mood_change += $moodBonus;
+                $this->game->message = self::EAT_MESSAGE_LIKE;
+            } else {
+                $this->mood_change += $moodPenalty;
+                $this->game->message = self::EAT_MESSAGE_HATE;
             }
         }
+            $this->communication_change -= 5;
+
     }
 
     // Погладить
     public function stroke () {
-        if (!$this->checkSameActions("communication")) {
-            $this->food_change -= 5;
-            $this->communication_change += 10;
-            /*if ($this->getReloadLeft('stroke') != 0) {
-                if ($this->actionDice > 5) {
-                    $this->mood_change -= 10;
-                    $this->energy_change -= 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
-                } else {
-                    $this->mood_change += 20;
-                    $this->energy_change += 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-                }
-            } else {
-                $this->mood_change += 15;
-                $this->energy_change += 10;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            }*/
-
-            $isReloading = $this->isReloading('stroke');
-            $probabilityLike = !$isReloading ? 8 : 5;
-            $moodBonus       = !$isReloading ? 20 : 15;
-            $moodPenalty     = -10;
-            $energyBonus     = !$isReloading ? 10 : 5;
-
-            if ($this->actionDice <= $probabilityLike) {
-                $this->mood_change += $moodBonus;
-                $this->energy_change += $energyBonus;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            } else {
-                $this->mood_change += $moodPenalty;
+        $this->food_change -= 5;
+        $this->communication_change += 10;
+        /*if ($this->getReloadLeft('stroke') != 0) {
+            if ($this->actionDice > 5) {
+                $this->mood_change -= 10;
+                $this->energy_change -= 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
+            } else {
+                $this->mood_change += 20;
+                $this->energy_change += 15;
+                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
             }
+        } else {
+            $this->mood_change += 15;
+            $this->energy_change += 10;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+        }*/
+
+        $isReloading = $this->isReloading('stroke');
+        $probabilityLike = !$isReloading ? 8 : 5;
+        $moodBonus       = !$isReloading ? 20 : 15;
+        $moodPenalty     = -10;
+        $energyBonus     = !$isReloading ? 10 : 5;
+
+        if ($this->actionDice <= $probabilityLike) {
+            $this->mood_change += $moodBonus;
+            $this->energy_change += $energyBonus;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+        } else {
+            $this->mood_change += $moodPenalty;
+            $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
         }
     }
 
     // Поиграть с дразнилкой
     public function playTeaser () {
-        if (!$this->checkSameActions("communication")) {
-            $this->food_change -= 15;
-            $this->communication_change += 10;
-            /*if ($this->getReloadLeft('play_teaser') != 0) {
-                $this->energy_change -= 20;
-                if ($this->actionDice > 8) {
-                    $this->mood_change -= 10;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
-                } else {
-                    $this->mood_change += 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-                }
+        $this->food_change -= 15;
+        $this->communication_change += 10;
+        /*if ($this->getReloadLeft('play_teaser') != 0) {
+            $this->energy_change -= 20;
+            if ($this->actionDice > 8) {
+                $this->mood_change -= 10;
+                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             } else {
                 $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            }*/
-
-            $isReloading = $this->isReloading('play_teaser');
-            $probabilityLike = !$isReloading ? 9 : 7;
-            $moodBonus       = !$isReloading ? 15 : 10;
-            $moodPenalty     = -10;
-
-            if ($this->actionDice <= $probabilityLike) {
-                $this->mood_change += $moodBonus;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            } else {
-                $this->mood_change += $moodPenalty;
-                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
+        } else {
+            $this->mood_change += 15;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+        }*/
+
+        $isReloading = $this->isReloading('play_teaser');
+        $probabilityLike = !$isReloading ? 9 : 7;
+        $moodBonus       = !$isReloading ? 15 : 10;
+        $moodPenalty     = -10;
+
+        if ($this->actionDice <= $probabilityLike) {
+            $this->mood_change += $moodBonus;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+        } else {
+            $this->mood_change += $moodPenalty;
+            $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
         }
     }
 
     // Поиграть с мышкой
     public function playMouse () {
-        if (!$this->checkSameActions("communication")) {
-            $this->food_change -= 10;
-            $this->communication_change += 10;
-            $this->energy_change -= 15;
-            /*if ($this->getReloadLeft('play_mouse')) {
-                if ($this->actionDice > 6) {
-                    $this->mood_change -= 10;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
-                } else {
-                    $this->mood_change += 15;
-                    $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-                }
+        $this->food_change -= 10;
+        $this->communication_change += 10;
+        $this->energy_change -= 15;
+        /*if ($this->getReloadLeft('play_mouse')) {
+            if ($this->actionDice > 6) {
+                $this->mood_change -= 10;
+                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             } else {
                 $this->mood_change += 15;
                 $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            }*/
-
-            $isReloading = $this->isReloading('play_teaser');
-            $probabilityLike = !$isReloading ? 8 : 5;
-            $moodBonus       = !$isReloading ? 15 : 10;
-            $moodPenalty     = -10;
-
-            if ($this->actionDice <= $probabilityLike) {
-                $this->mood_change += $moodBonus;
-                $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
-            } else {
-                $this->mood_change += $moodPenalty;
-                $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
             }
+        } else {
+            $this->mood_change += 15;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+        }*/
+
+        $isReloading = $this->isReloading('play_teaser');
+        $probabilityLike = !$isReloading ? 8 : 5;
+        $moodBonus       = !$isReloading ? 15 : 10;
+        $moodPenalty     = -10;
+
+        if ($this->actionDice <= $probabilityLike) {
+            $this->mood_change += $moodBonus;
+            $this->game->message = self::COMMUNICATE_MESSAGE_LIKE;
+        } else {
+            $this->mood_change += $moodPenalty;
+            $this->game->message = self::COMMUNICATE_MESSAGE_HATE;
         }
     }
 
@@ -316,31 +307,34 @@ class Cat
         // Выбираем и запускаем действие
         // В действиях не меняем муд/фуд, а присваиваем _change
         $this->actionDice = rand(1, 10);
-        switch ($action_type) {
-            case 'eat_dry':
-                $this->feed('dry');
-                break;
-            case 'eat_wet':
-                $this->feed('wet');
-                break;
-            case 'eat_home':
-                $this->feed('home');
-                break;
-            case 'stroke':
-                $this->stroke();
-                break;
-            case 'play_teaser':
-                $this->playTeaser();
-                break;
-            case 'play_mouse':
-                $this->playMouse();
-                break;
-            case 'walking':
-                $this->walking();
-                break;
-            case 'sleep':
-                $this->sleep();
-                break;
+
+        if (!$this->checkSameActions()) {
+            switch ($action_type) {
+                case 'eat_dry':
+                    $this->feed('dry');
+                    break;
+                case 'eat_wet':
+                    $this->feed('wet');
+                    break;
+                case 'eat_home':
+                    $this->feed('home');
+                    break;
+                case 'stroke':
+                    $this->stroke();
+                    break;
+                case 'play_teaser':
+                    $this->playTeaser();
+                    break;
+                case 'play_mouse':
+                    $this->playMouse();
+                    break;
+                case 'walking':
+                    $this->walking();
+                    break;
+                case 'sleep':
+                    $this->sleep();
+                    break;
+            }
         }
 
         $this->mood += $this->mood_change;
