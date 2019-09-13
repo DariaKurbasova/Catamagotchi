@@ -25,9 +25,6 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
 
     $cat = $game->cat;
 
-//     echo(count($game->action_history));
-//     echo "<br>";
-
     ?>
     <div class = "game_page">
         <div class = "container">
@@ -53,7 +50,8 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             <div class = "instruction" style = "display: none">
                 <h2>Инструкция к игре</h2>
                 <p>
-                    Цель игры очень проста – вам нужно добиться, чтобы все показатели благополучия котика были не меньше 80.
+                    Цель игры очень проста – вам нужно добиться, чтобы все показатели благополучия котика были не меньше 80,
+                    либо чтобы показатель счастья стал не менее 95.
                     За это котик отплатит вам любовью, и вы заслужите репутацию заботливого хозяина.
                 </p>
                 <p>
@@ -66,12 +64,11 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                     Также повторив одно и то же действие 3 раза, вы рискуете сильно испортить настроение котику.
                 </p>
                 <p>
-                    Что будет, если какой-либо из показателей достигнет отметки 10 и ниже? Не советую вам это проверять.
+                    Что будет, если какой-либо из показателей достигнет нуля? Не советую вам это проверять.
                     Вам же не хочется испытать чувство вины за плохую заботу о питомце, верно?
                 </p>
             </div>
 
-            <div style="display: none;" class = "cat_name">Вашего котика зовут: <?= $cat->name ?></div>
             <div class = "actions">
                 <?php if (count($game->action_history) % 5 == 4) { ?>
                     <div class = "sleep action">
@@ -81,6 +78,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <p class = "action_title">Котик хочет спать!</p>
                     </div>
                 <?php } else { ?>
+
                 <div class = "food_actions">
                     <div class = "feed_dry food_action action">
                         <a style="text-decoration: none;" href="action.php?action=eat_dry" class = "tooltip">
@@ -107,6 +105,7 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
                         <p class = "action_title">Покормить домашней едой</p>
                     </div>
                 </div>
+
                 <div class = "communication_actions">
                     <div class = "stroke communication_action action">
                         <a style="text-decoration: none;" href="action.php?action=stroke" class = "tooltip">
@@ -185,14 +184,18 @@ if (!empty($_SESSION['game']) && $_SESSION['game'] instanceof Game) {
             </div>
             <div class="clearfix"></div>
             <?php } ?>
+
             <div class = "restart_game" >
                 <a style="text-decoration: none; color: #070866;" href="action.php?action=start_game&name=<?= $cat->name ?>">Начать игру с котиком заново</a><br><br>
             </div>
+            <br>
+            <div class = "cat_name">Имя вашего котика - <?= $cat->name ?></div>
+            <div class="clearfix"></div>
 
             <footer>
                 <hr style="border: 1px solid #00006b; margin-bottom: 0">
                 <p class = "author_name">Автор проекта - Курбасова Дарья</p>
-                <p class = "rights" title="От кого?">Все права защищены</p>
+                <p class = "rights">Все права защищены</p>
             </footer>
         </div>
     </div>

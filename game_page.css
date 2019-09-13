@@ -99,6 +99,14 @@ svg {
     left: 0;
     z-index: 1;
 }
+.cat_name {
+    float: left;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: bold;
+    color: #343434;
+    margin-left: 200px;
+}
 .restart_game {
     display: block;
     word-wrap: break-word;
@@ -114,6 +122,7 @@ svg {
     padding-top: 5px;
     margin-top: 10px;
     cursor: pointer;
+    float: left;
 }
 .restart_game:hover {
     background-color: #a2a5d7;
